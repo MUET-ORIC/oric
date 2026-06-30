@@ -7,6 +7,9 @@ import ResearchExcellence from "./components/ResearchExcellence";
 import InnovationCommercialization from "./components/InnovationCommercialization";
 import SustainabilityCapacity from "./components/SustainabilityCapacityBuilding";
 
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+axios.defaults.baseURL = API_URL;
 axios.defaults.withCredentials = true;
 
 export default function App() {
@@ -26,12 +29,12 @@ export default function App() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/auth/me");
+        const res = await axios.get("/auth/me");
         if (res.data.success) {
           setUser(res.data.user);
           setIsLoggedIn(true);
         }
-      } catch (error) {
+      } catch {
         setIsLoggedIn(false);
         setUser(null);
       }
@@ -46,9 +49,9 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/logout");
+      await axios.post("/logout");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
     setIsLoggedIn(false);
     setUser(null);
@@ -63,7 +66,6 @@ export default function App() {
       default: return <ResearchExcellence />;
     }
   };
-
 
   const getDepartmentShort = (dept) => {
     if (!dept) return "??";
@@ -113,8 +115,6 @@ export default function App() {
                 ✕
               </button>
             </div>
-
-            {/* Module buttons */}
             <div className="space-y-3 flex-1">
               {modules.map((m) => (
                 <button
@@ -135,8 +135,6 @@ export default function App() {
                 </button>
               ))}
             </div>
-
-            {/* ── Mobile Department + Logout (integrated) ── */}
             <div className="mt-6 border-t pt-4">
               <div className="relative">
                 <button
@@ -150,8 +148,7 @@ export default function App() {
                     {user?.department || "Department"}
                   </span>
                   <svg
-                    className={`w-4 h-4 ml-auto transition-transform duration-200 ${showLogoutDropdown ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 ml-auto transition-transform duration-200 ${showLogoutDropdown ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -159,7 +156,6 @@ export default function App() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-
                 {showLogoutDropdown && (
                   <div className="mt-1 bg-white border rounded-xl shadow-lg py-1">
                     <button
@@ -184,7 +180,6 @@ export default function App() {
           ${collapsed ? "w-20" : "w-72"}
         `}
       >
-        {/* Logo & collapse toggle */}
         <div
           className="flex items-center gap-3 p-4 border-b cursor-pointer hover:bg-gray-50 transition"
           onClick={() => setCollapsed(!collapsed)}
@@ -198,7 +193,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Menu */}
         <nav className="p-3 space-y-2">
           {modules.map((m) => {
             const isActive = activeModule === m.key;
@@ -251,8 +245,7 @@ export default function App() {
               )}
               {!collapsed && (
                 <svg
-                  className={`w-4 h-4 ml-auto transition-transform duration-200 ${showLogoutDropdown ? "rotate-180" : ""
-                    }`}
+                  className={`w-4 h-4 ml-auto transition-transform duration-200 ${showLogoutDropdown ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -262,14 +255,14 @@ export default function App() {
               )}
             </button>
 
-            {/* ─── UPDATED LOGOUT DROPDOWN ───────────── */}
+
             {showLogoutDropdown && (
               <div
                 className={`
                   absolute bg-white border rounded-xl shadow-lg py-1 min-w-[150px] z-50
                   ${collapsed
-                    ? 'left-full ml-2 top-1/2 -translate-y-1/2'
-                    : 'bottom-full left-0 right-0 mb-2'
+                    ? "left-full ml-2 top-1/2 -translate-y-1/2"
+                    : "bottom-full left-0 right-0 mb-2"
                   }
                 `}
               >
