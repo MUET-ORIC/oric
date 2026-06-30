@@ -1,4 +1,3 @@
-// src/components/InnovationCommercialization.jsx
 import React, { useState, useRef, useEffect } from "react";
 import KPI1_InnovationForm from "./Innovation/KPI1_InnovationForm";
 import KPI2_InnovationForm from "./Innovation/KPI2_InnovationForm";

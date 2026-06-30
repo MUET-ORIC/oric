@@ -1,4 +1,3 @@
-// src/components/SustainabilityCapacity.jsx
 import React, { useState, useRef, useEffect } from "react";
 import KPI1_SustainabilityForm from "./Sustainability/KPI1_SustainabilityForm";
 import KPI2_SustainabilityForm from "./Sustainability/KPI2_SustainabilityForm";

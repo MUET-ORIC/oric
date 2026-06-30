@@ -1,5 +1,3 @@
-// src/components/Innovation/KPI11_InnovationForm.jsx
-// Same as KPI9 but with "International" and endpoint kpi11
 import React, { useState, useCallback, useRef } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";

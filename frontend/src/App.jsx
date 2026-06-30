@@ -1,4 +1,3 @@
-// src/App.js
 import { useState, useEffect } from "react";
 import axios from "axios";
 import logo from "./assets/oric-muet-eesd2026.jpeg";
@@ -24,7 +23,6 @@ export default function App() {
     { key: "sustainability", label: "Sustainability & Capacity", short: "SC" },
   ];
 
-  // Check session on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -50,7 +48,7 @@ export default function App() {
     try {
       await axios.post("http://localhost:5000/logout");
     } catch (error) {
-      // ignore
+      console.log(error)
     }
     setIsLoggedIn(false);
     setUser(null);

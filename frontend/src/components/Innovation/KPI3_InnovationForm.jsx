@@ -1,4 +1,3 @@
-// src/components/Innovation/KPI3_InnovationForm.jsx
 import React from "react";
 import UnderDevelopment from "../common/UnderDevelopment";
 
