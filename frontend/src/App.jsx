@@ -64,7 +64,7 @@ export default function App() {
     }
   };
 
-  // Helper: department short form (first 2 letters, or first letters of each word)
+
   const getDepartmentShort = (dept) => {
     if (!dept) return "??";
     const parts = dept.split(" ");

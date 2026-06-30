@@ -17,6 +17,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://oricmuet-data-entry-automation-system.netlify.app',
+        'https://data-handling-6zhs.vercel.app'
     ],
     credentials: true,
 }));
@@ -39,8 +40,13 @@ app.use((req, res) => {
 });
 
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-    console.log('📁 Data stored under ./data/');
-});
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+        console.log(`✅ Server running on http://localhost:${PORT}`);
+        console.log('📁 Data stored under ./data/');
+    });
+}
+
+module.exports = app;
