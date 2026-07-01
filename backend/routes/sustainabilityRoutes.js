@@ -22,6 +22,7 @@ const createRoute = (kpiNumber, headers, fieldMapIndex) => {
     });
 };
 
+// KPI1 to KPI7
 createRoute(1, sustainabilityKpi1Headers, 0);
 createRoute(2, sustainabilityKpi2Headers, 1);
 createRoute(3, sustainabilityKpi3Headers, 2);

@@ -22,7 +22,6 @@ const {
 const router = express.Router();
 const MODULE = 'InnovationCommercialization';
 
-// Helper
 const createRoute = (kpiNumber, headers, fieldMapIndex) => {
     router.post(`/kpi${kpiNumber}`, authenticateToken, upload.single('documentFile'), (req, res) => {
         handleKpiPost(req, res, MODULE, `KPI${kpiNumber}`, headers, innovationFieldMaps[fieldMapIndex]);

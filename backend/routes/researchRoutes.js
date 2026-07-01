@@ -27,7 +27,6 @@ const {
 const router = express.Router();
 const MODULE = 'ResearchExcellence';
 
-// Helper to create routes programmatically
 const createRoute = (kpiNumber, headers, fieldMapIndex) => {
     router.post(`/kpi${kpiNumber}`, authenticateToken, upload.single('documentFile'), (req, res) => {
         handleKpiPost(req, res, MODULE, `KPI${kpiNumber}`, headers, researchFieldMaps[fieldMapIndex]);

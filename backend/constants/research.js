@@ -1,4 +1,3 @@
-
 // ─── RESEARCH KPI HEADERS ─────────────────────────────────────────────
 
 const researchKpi1Headers = [

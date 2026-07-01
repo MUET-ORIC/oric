@@ -1,4 +1,3 @@
-
 // ─── INNOVATION KPI HEADERS ───────────────────────────────────────────
 
 const innovationKpi1Headers = [

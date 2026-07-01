@@ -1,4 +1,3 @@
-
 // ─── SUSTAINABILITY KPI HEADERS ─────────────────────────────────────────
 
 const sustainabilityKpi1Headers = [

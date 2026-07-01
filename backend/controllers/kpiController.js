@@ -14,6 +14,7 @@ exports.handleKpiPost = async (req, res, moduleName, kpiName, headers, fieldMapp
         const file = req.file;
         const department = req.user.department;
 
+        // Validate headers
         if (!headers || !Array.isArray(headers) || headers.length === 0) {
             console.error('❌ Headers are empty or invalid for', moduleName, kpiName);
             return res.status(500).json({
@@ -22,10 +23,8 @@ exports.handleKpiPost = async (req, res, moduleName, kpiName, headers, fieldMapp
             });
         }
 
-        // ── Log for debugging ──
         console.log(`📝 [${moduleName}] ${kpiName} submission`);
-        console.log('📋 Headers:', JSON.stringify(headers, null, 2));
-        console.log('🔍 Field Mapping:', fieldMapping);
+        console.log('📋 Headers count:', headers.length);
         console.log('📦 Form data:', b);
         console.log('📎 File:', file ? file.filename : 'none');
 
@@ -35,15 +34,14 @@ exports.handleKpiPost = async (req, res, moduleName, kpiName, headers, fieldMapp
         console.log('📁 Dept CSV:', deptCsvPath);
         console.log('📁 Global CSV:', globalCsvPath);
 
-        // ── Check file lock ──
         if (isFileLocked(deptCsvPath) || isFileLocked(globalCsvPath)) {
             return res.status(409).json({
                 success: false,
-                message: 'The CSV file is currently open in another program. Please close it and try again.',
+                message: 'CSV file is currently open. Please close and retry.',
             });
         }
 
-        // ── Build row from fieldMapping ──
+        // Build row
         const row = {};
         Object.keys(fieldMapping).forEach((key) => {
             row[key] = b[key] || 'NIL';
@@ -51,12 +49,11 @@ exports.handleKpiPost = async (req, res, moduleName, kpiName, headers, fieldMapp
         row.department = department;
         row.document = file ? file.filename : 'NIL';
 
-        // ── Get next serial numbers ──
         const getNextSr = (csvPath) => {
             if (!fs.existsSync(csvPath)) return 1;
             const data = fs.readFileSync(csvPath, 'utf8');
             const lines = data.split('\n').filter((line) => line.trim() !== '');
-            return lines.length; // header counts as line 1, so next is length
+            return lines.length;
         };
 
         const srDept = getNextSr(deptCsvPath);
@@ -65,11 +62,14 @@ exports.handleKpiPost = async (req, res, moduleName, kpiName, headers, fieldMapp
         const deptRow = { ...row, sr: srDept };
         const globalRow = { ...row, sr: srGlobal };
 
-        // ── Write CSV (headers + row) ──
+        // Write CSV
         writeCSVAtomically(deptCsvPath, headers, deptRow);
         writeCSVAtomically(globalCsvPath, headers, globalRow);
 
-        // ── Handle file upload (if any) ──
+        console.log(`✅ Dept CSV written: ${path.resolve(deptCsvPath)}`);
+        console.log(`✅ Global CSV written: ${path.resolve(globalCsvPath)}`);
+
+        // Handle file upload
         if (file) {
             const globalEvidencesDir = getGlobalEvidencesPath(moduleName, kpiName);
             if (!fs.existsSync(globalEvidencesDir)) {
