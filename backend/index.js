@@ -17,6 +17,7 @@ app.use(cors({
         'http://localhost:5173',
         'https://oricmuet-data-entry-automation-system.netlify.app',
         'https://data-handling-6zhs.vercel.app',
+        'https://data-handling-6zhs-khnbrk9xd-thejunaidahmeds-projects.vercel.app'
     ],
     credentials: true,
 }));
@@ -36,7 +37,6 @@ app.use('/submit/sustainability', sustainabilityRoutes);
 app.use((req, res) => {
     res.status(404).json({ success: false, message: 'Endpoint not found' });
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

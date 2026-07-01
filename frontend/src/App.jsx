@@ -12,6 +12,8 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 axios.defaults.baseURL = API_URL;
 axios.defaults.withCredentials = true;
 
+console.log("🔗 API_URL =", API_URL);
+
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -81,7 +83,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-800">
-
       {/* ─── MOBILE TOP BAR ──────────────────────────── */}
       <div className="md:hidden flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
         <div className="flex items-center gap-3">
@@ -254,7 +255,6 @@ export default function App() {
                 </svg>
               )}
             </button>
-
 
             {showLogoutDropdown && (
               <div

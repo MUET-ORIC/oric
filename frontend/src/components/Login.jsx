@@ -3,8 +3,6 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import logo from "../assets/oric-muet-eesd2026.jpeg";
 
-// Ensure cookies are sent with requests
-axios.defaults.withCredentials = true;
 
 const departments = [
     "Architecture",
@@ -58,7 +56,7 @@ export default function Login({ onLogin }) {
 
         setLoading(true);
         try {
-            const response = await axios.post("http://localhost:5000/login", {
+            const response = await axios.post("/login", {
                 username,
                 password,
                 department
