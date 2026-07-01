@@ -60,7 +60,7 @@ export default function KPI4ResearchGrantForm() {
             });
 
             // ── CORRECT endpoint ──
-            const res = await axios.post("http://localhost:5000/submit/research/kpi4", payload, {
+            const res = await axios.post("/submit/research/kpi4", payload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

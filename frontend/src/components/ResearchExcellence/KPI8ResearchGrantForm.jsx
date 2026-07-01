@@ -58,7 +58,7 @@ export default function KPI8ResearchGrantForm() {
             });
 
             // ── CORRECT endpoint ──
-            const res = await axios.post("http://localhost:5000/submit/research/kpi8", payload, {
+            const res = await axios.post("/submit/research/kpi8", payload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

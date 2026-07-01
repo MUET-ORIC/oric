@@ -47,7 +47,7 @@ export default function KPI6_SustainabilityForm() {
                     payload.append(key, form[key] || "NIL");
                 }
             });
-            const res = await axios.post("http://localhost:5000/submit/sustainability/kpi6", payload, {
+            const res = await axios.post("/submit/sustainability/kpi6", payload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {

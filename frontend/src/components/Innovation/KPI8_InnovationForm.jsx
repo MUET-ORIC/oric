@@ -51,7 +51,7 @@ export default function KPI8_InnovationForm() {
                     payload.append(key, form[key] || "NIL");
                 }
             });
-            const res = await axios.post("http://localhost:5000/submit/innovation/kpi8", payload, {
+            const res = await axios.post("/submit/innovation/kpi8", payload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {

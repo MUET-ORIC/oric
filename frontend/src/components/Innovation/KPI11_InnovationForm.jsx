@@ -53,7 +53,7 @@ export default function KPI11_InnovationForm() {
                     payload.append(key, form[key] || "NIL");
                 }
             });
-            const res = await axios.post("http://localhost:5000/submit/innovation/kpi11", payload, {
+            const res = await axios.post("/submit/innovation/kpi11", payload, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             if (res.data.success) {

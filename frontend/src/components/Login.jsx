@@ -3,7 +3,6 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import logo from "../assets/oric-muet-eesd2026.jpeg";
 
-
 const departments = [
     "Architecture",
     "Basic Sciences & Related Studies",
@@ -63,7 +62,8 @@ export default function Login({ onLogin }) {
             });
             if (response.data.success) {
                 toast.success("Welcome back!");
-                onLogin(response.data.user);
+                // ✅ Pass token to App.js along with user data
+                onLogin(response.data.user, response.data.token);
             } else {
                 toast.error(response.data.message || "Login failed.");
             }

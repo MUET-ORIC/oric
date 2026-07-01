@@ -43,22 +43,16 @@ exports.login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { username: user.username, department: user.department },  // ← department included
+            { username: user.username, department: user.department },
             JWT_SECRET,
             { expiresIn: '7d' }
         );
 
-        console.log('🔑 Token created for:', user.username, 'dept:', user.department); // debug
-
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: true,   // always true if using HTTPS (ngrok)
-            sameSite: 'none',
-            maxAge: 3 * 60 * 60 * 1000,
-        });
+        console.log('🔑 Token created for:', user.username, 'dept:', user.department);
 
         res.json({
             success: true,
+            token,
             user: { username: user.username, department: user.department },
         });
     } catch (err) {
@@ -68,12 +62,10 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-    res.clearCookie('token');
     res.json({ success: true });
 };
 
 exports.me = (req, res) => {
-    // req.user is set by authenticateToken middleware
-    console.log('👤 /auth/me returning:', req.user); // debug
+    console.log('👤 /auth/me returning:', req.user);
     res.json({ success: true, user: req.user });
 };
