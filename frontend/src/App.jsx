@@ -9,19 +9,7 @@ import SustainabilityCapacity from "./components/SustainabilityCapacityBuilding"
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 axios.defaults.baseURL = API_URL;
-// ❌ Remove: axios.defaults.withCredentials = true;
-
-// ✅ Interceptor to attach token from localStorage
-axios.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error)
-);
+axios.defaults.withCredentials = true;
 
 console.log("🔗 API_URL =", API_URL);
 
@@ -47,14 +35,10 @@ export default function App() {
           setUser(res.data.user);
           setIsLoggedIn(true);
         } else {
-          // If response says not success, clear token
-          localStorage.removeItem('token');
           setIsLoggedIn(false);
           setUser(null);
         }
       } catch {
-        // Token invalid or missing – clear storage
-        localStorage.removeItem('token');
         setIsLoggedIn(false);
         setUser(null);
       }
@@ -62,10 +46,10 @@ export default function App() {
     checkAuth();
   }, []);
 
-  const handleLogin = (userData, token) => {
+
+  const handleLogin = (userData) => {
     setUser(userData);
     setIsLoggedIn(true);
-    localStorage.setItem('token', token); // ✅ store token
   };
 
   const handleLogout = async () => {
@@ -74,7 +58,6 @@ export default function App() {
     } catch (error) {
       console.log(error);
     }
-    localStorage.removeItem('token'); // ✅ remove token
     setIsLoggedIn(false);
     setUser(null);
     setShowLogoutDropdown(false);

@@ -62,8 +62,8 @@ export default function Login({ onLogin }) {
             });
             if (response.data.success) {
                 toast.success("Welcome back!");
-                // ✅ Pass token to App.js along with user data
-                onLogin(response.data.user, response.data.token);
+                // ✅ Only user data – token is in httpOnly cookie
+                onLogin(response.data.user);
             } else {
                 toast.error(response.data.message || "Login failed.");
             }

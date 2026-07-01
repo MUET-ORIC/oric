@@ -50,9 +50,15 @@ exports.login = async (req, res) => {
 
         console.log('🔑 Token created for:', user.username, 'dept:', user.department);
 
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',      // cross-site (Vercel + Render)
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         res.json({
             success: true,
-            token,
             user: { username: user.username, department: user.department },
         });
     } catch (err) {
@@ -62,6 +68,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
+    res.clearCookie('token');
     res.json({ success: true });
 };
 
