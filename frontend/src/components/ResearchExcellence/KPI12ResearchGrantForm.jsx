@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import { submitKpi } from "../../api/submissions";
 import Field from "../common/Field";
 import { departments } from "../../utils/constants";
@@ -33,7 +33,6 @@ export default function KPI12ResearchGrantForm() {
     });
     const [loading, setLoading] = useState(false);
     const [showReview, setShowReview] = useState(false);
-    const fileInputRef = useRef(null);
 
     const handleChange = useCallback((e) => {
         const { name, type, value, files } = e.target;
@@ -65,7 +64,7 @@ export default function KPI12ResearchGrantForm() {
     };
 
     const submit = async () => {
-        const loadingToast = showLoading('Submitting...', 'Please wait while your data is being saved.');
+        const loadingToast = showLoading('Submitting...', 'Please wait...');
         try {
             const { document, department, ...fields } = form;
             await submitKpi('ResearchExcellence', 'KPI12', user.department, fields, document);
@@ -75,11 +74,10 @@ export default function KPI12ResearchGrantForm() {
                 linkageType: "", mouDate: "", nationalInternational: "", hostInstitution: "",
                 collaboratingAgency: "", fieldOfStudy: "", scope: "", salientFeatures: "", document: null,
             });
-            if (fileInputRef.current) fileInputRef.current.value = "";
             setShowReview(false);
         } catch (err) {
             dismissToast(loadingToast);
-            showError('Submission Failed', err.response?.data?.message || 'Something went wrong. Please try again.');
+            showError('Submission Failed', err.response?.data?.message || 'Something went wrong.');
         }
     };
 
@@ -93,24 +91,28 @@ export default function KPI12ResearchGrantForm() {
     return (
         <div className="space-y-6 animate-fadeIn">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <Field label="Type of Linkage (Academic/Research)" name="linkageType" value={form.linkageType} onChange={handleChange} placeholder="e.g. Academic, Research" required />
+                <Field label="Type of Linkage (Academic/Research)" name="linkageType" value={form.linkageType} onChange={handleChange} placeholder="e.g. Academic" required />
                 <Field label="Date of MoU/Agreement" name="mouDate" type="date" value={form.mouDate} onChange={handleChange} required />
-                <Field label="National or International" name="nationalInternational" value={form.nationalInternational} onChange={handleChange} placeholder="National / International" />
+                <Field label="National or International" name="nationalInternational" value={form.nationalInternational} onChange={handleChange} />
                 <Field label="Host Institution (Name & Address)" name="hostInstitution" value={form.hostInstitution} onChange={handleChange} placeholder="e.g. NUST, Islamabad" required />
-                <Field label="Collaborating Agency/Institution" name="collaboratingAgency" value={form.collaboratingAgency} onChange={handleChange} placeholder="e.g. HEC" />
-                <Field label="Field of Study / Research Broader Areas" name="fieldOfStudy" value={form.fieldOfStudy} onChange={handleChange} placeholder="e.g. AI, Renewable Energy" />
-                <Field label="Scope of Collaboration" name="scope" value={form.scope} onChange={handleChange} placeholder="e.g. Student exchange, Joint research" />
-                <Field label="Salient Features of Linkage" name="salientFeatures" value={form.salientFeatures} onChange={handleChange} placeholder="Key features of the linkage" />
+                <Field label="Collaborating Agency/Institution" name="collaboratingAgency" value={form.collaboratingAgency} onChange={handleChange} />
+                <Field label="Field of Study / Research Broader Areas" name="fieldOfStudy" value={form.fieldOfStudy} onChange={handleChange} />
+                <Field label="Scope of Collaboration" name="scope" value={form.scope} onChange={handleChange} />
+                <Field label="Salient Features of Linkage" name="salientFeatures" value={form.salientFeatures} onChange={handleChange} />
             </div>
 
             <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                        Annex Page Ref. (MoU Copy)
-                        <span className="text-red-500 text-base">*</span>
-                    </label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <input ref={fileInputRef} type="file" name="document" accept=".pdf,application/pdf" onChange={handleChange} className="w-full sm:w-auto px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm transition-all focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:text-sm file:font-medium hover:file:bg-blue-100" required />
+                <div className="flex flex-col gap-3">
+                    <Field
+                        label="Annex Page Ref. (MoU Copy)"
+                        name="document"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleChange}
+                        required
+                        maxSize={0.4 * 1024 * 1024}
+                    />
+                    <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-500 truncate max-w-xs">
                             {fileName !== "No file selected" ? (
                                 <span className="flex items-center gap-2">
@@ -125,7 +127,7 @@ export default function KPI12ResearchGrantForm() {
                             )}
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 5MB).</p>
+                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 0.4 MB).</p>
                 </div>
             </div>
 

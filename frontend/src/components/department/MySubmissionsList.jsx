@@ -45,10 +45,27 @@ export default function MySubmissionsList({ submissions, loading, onRefresh }) {
                             <tr key={sub._id} className="hover:bg-gray-50 transition">
                                 <td className="px-4 py-3 text-gray-500">{i + 1}</td>
                                 <td className="px-4 py-3 font-medium text-gray-800">{sub.module.replace(/([A-Z])/g, ' $1').trim()}</td>
-                                <td className="px-4 py-3"><span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{sub.kpi}</span></td>
-                                <td className="px-4 py-3 text-gray-500">{format(new Date(sub.createdAt), 'dd MMM yyyy, hh:mm a')}</td>
                                 <td className="px-4 py-3">
-                                    {sub.pdfFilename ? <a href={`${import.meta.env.VITE_API_URL}/uploads/${sub.pdfFilename}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 hover:underline text-sm">View PDF</a> : <span className="text-gray-400 text-sm">N/A</span>}
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        {sub.kpi}
+                                    </span>
+                                </td>
+                                <td className="px-4 py-3 text-gray-500">
+                                    {format(new Date(sub.createdAt), 'dd MMM yyyy, hh:mm a')}
+                                </td>
+                                <td className="px-4 py-3">
+                                    {sub.pdfPath ? (
+                                        <a
+                                            href={sub.pdfPath}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:text-blue-800 hover:underline text-sm"
+                                        >
+                                            View PDF
+                                        </a>
+                                    ) : (
+                                        <span className="text-gray-400 text-sm">N/A</span>
+                                    )}
                                 </td>
                             </tr>
                         ))}

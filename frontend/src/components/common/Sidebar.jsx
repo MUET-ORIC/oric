@@ -10,6 +10,9 @@ import {
     FiChevronLeft,
     FiChevronRight,
     FiHelpCircle,
+    FiBook,
+    FiTrendingUp,
+    FiAward,
 } from 'react-icons/fi';
 import logo from '../../assets/oric-muet-eesd2026.jpeg';
 import UsageGuide from './UsageGuide';
@@ -27,9 +30,10 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                 { to: '/admin/submissions', label: 'Submissions', icon: FiFolder },
             ]
             : [
-                { to: '/research', label: 'Research', icon: FiBarChart2, end: true },
-                { to: '/innovation', label: 'Innovation', icon: FiFileText },
-                { to: '/sustainability', label: 'Sustainability', icon: FiFolder },
+                { to: '/department', label: 'Dashboard', icon: FiHome, end: true },
+                { to: '/research', label: 'Research', icon: FiBook, end: true },
+                { to: '/innovation', label: 'Innovation', icon: FiTrendingUp },
+                { to: '/sustainability', label: 'Sustainability', icon: FiAward },
                 { to: '/my-submissions', label: 'My Submissions', icon: FiFolder },
             ];
 
@@ -50,18 +54,27 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
 
     return (
         <aside
-            className={`fixed top-0 left-0 h-screen bg-white border-r border-gray-200 shadow-sm transition-all duration-300 z-50 flex flex-col ${collapsed ? 'w-16' : 'w-64'
-                }`}
+            className={`
+                fixed top-0 left-0 h-screen bg-white border-r border-gray-100/80
+                shadow-sm transition-all duration-300 z-50 flex flex-col
+                ${collapsed ? 'w-16' : 'w-64'}
+            `}
         >
             {/* ─── Header / Logo ──────────────────────────── */}
             <div
-                className={`flex items-center h-16 px-3 border-b border-gray-100 ${collapsed ? 'justify-center' : 'justify-between'
-                    }`}
+                className={`
+                    relative flex items-center h-16 px-3 border-b border-gray-100/80
+                    ${collapsed ? 'justify-center' : 'justify-between'}
+                `}
             >
                 <div className={`flex items-center gap-2 ${collapsed ? 'justify-center w-full' : ''}`}>
-                    <img src={logo} className="w-10 h-10 rounded-lg flex-shrink-0" alt="ORIC MUET" />
+                    <img
+                        src={logo}
+                        className="w-10 h-10 rounded-xl shadow-sm ring-1 ring-gray-200/50"
+                        alt="ORIC MUET"
+                    />
                     {!collapsed && (
-                        <span className="font-bold text-blue-900 text-lg whitespace-nowrap">
+                        <span className="font-bold text-blue-900 text-lg whitespace-nowrap tracking-tight">
                             ORIC MUET
                         </span>
                     )}
@@ -70,7 +83,7 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                 {!collapsed && (
                     <button
                         onClick={toggleCollapse}
-                        className="p-1 rounded-lg hover:bg-gray-100 text-gray-500"
+                        className="p-1.5 rounded-lg text-gray-400 hover:text-blue-900 hover:bg-blue-50/50 transition"
                         aria-label="Collapse sidebar"
                     >
                         <FiChevronLeft className="w-5 h-5" />
@@ -80,7 +93,7 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                 {collapsed && (
                     <button
                         onClick={toggleCollapse}
-                        className="absolute -right-3 top-5 p-1 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-500"
+                        className="absolute -right-3 top-5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 text-gray-400 hover:text-blue-900 transition"
                         aria-label="Expand sidebar"
                     >
                         <FiChevronRight className="w-4 h-4" />
@@ -96,10 +109,15 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                         to={link.to}
                         end={link.end || false}
                         className={({ isActive }) =>
-                            `relative flex items-center px-3 py-2.5 rounded-lg transition-all duration-200 ${isActive
-                                ? 'bg-blue-50 text-blue-900 font-medium shadow-sm'
-                                : 'text-gray-600 hover:bg-gray-50'
-                            } ${collapsed ? 'justify-center' : ''}`
+                            `
+                                relative flex items-center px-3 py-2.5 rounded-xl
+                                transition-all duration-200
+                                ${isActive
+                                ? 'bg-blue-900/5 text-blue-900 font-medium shadow-sm ring-1 ring-blue-900/10'
+                                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                            }
+                                ${collapsed ? 'justify-center' : ''}
+                            `
                         }
                     >
                         {({ isActive }) => (
@@ -108,7 +126,7 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-900 rounded-r-full" />
                                 )}
                                 <link.icon
-                                    className={`w-5 h-5 ${isActive ? 'text-blue-900' : 'text-gray-400'}`}
+                                    className={`w-5 h-5 ${isActive ? 'text-blue-900' : 'text-gray-400 group-hover:text-gray-600'}`}
                                 />
                                 {!collapsed && <span className="ml-3 text-sm">{link.label}</span>}
                             </>
@@ -118,12 +136,15 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
             </nav>
 
             {/* ─── User Section ───────────────────────────────── */}
-            <div className="p-3 border-t border-gray-100 space-y-1">
+            <div className="p-3 border-t border-gray-100/80 space-y-1 bg-gradient-to-t from-gray-50/30 to-transparent">
                 {/* ─── Usage Guide Button ──────────────────────── */}
                 <button
                     onClick={() => setShowUsageGuide(true)}
-                    className={`flex items-center w-full px-3 py-2 rounded-lg transition-all duration-200 text-gray-500 hover:bg-blue-50 hover:text-blue-700 ${collapsed ? 'justify-center' : ''
-                        }`}
+                    className={`
+                        flex items-center w-full px-3 py-2 rounded-xl transition-all duration-200
+                        text-gray-400 hover:text-blue-900 hover:bg-blue-50/50
+                        ${collapsed ? 'justify-center' : ''}
+                    `}
                 >
                     <FiHelpCircle className="w-5 h-5" />
                     {!collapsed && <span className="ml-3 text-sm font-medium">Usage Guide</span>}
@@ -133,11 +154,14 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                 <div className="relative">
                     <button
                         onClick={toggleDropdown}
-                        className={`flex items-center w-full px-3 py-2.5 rounded-lg transition-all duration-200 text-gray-600 hover:bg-gray-50 ${collapsed ? 'justify-center' : ''
-                            }`}
+                        className={`
+                            flex items-center w-full px-3 py-2.5 rounded-xl transition-all duration-200
+                            text-gray-600 hover:bg-gray-50
+                            ${collapsed ? 'justify-center' : ''}
+                        `}
                     >
                         <div
-                            className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-sm flex-shrink-0 select-none overflow-hidden"
+                            className="w-8 h-8 rounded-full bg-blue-900 text-white flex items-center justify-center font-bold text-sm flex-shrink-0 select-none shadow-sm ring-1 ring-gray-200/50"
                             style={{ fontSize: '0.75rem', lineHeight: '1' }}
                         >
                             {getDepartmentShort(user?.department)}
@@ -145,11 +169,11 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
 
                         {!collapsed && (
                             <>
-                                <span className="ml-3 text-sm font-medium truncate">
+                                <span className="ml-3 text-sm font-medium truncate text-gray-700">
                                     {user?.department || 'Department'}
                                 </span>
                                 <svg
-                                    className={`w-6 h-6 ml-auto transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''
+                                    className={`w-6 h-6 ml-auto text-gray-400 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''
                                         }`}
                                     fill="none"
                                     stroke="currentColor"
@@ -170,8 +194,8 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                     {dropdownOpen && (
                         <div
                             className={`
-                                absolute z-50 bg-white border border-gray-200
-                                rounded-xl shadow-xl py-2 min-w-[220px] transition-all duration-200
+                                absolute z-50 bg-white/95 backdrop-blur-sm border border-gray-100
+                                rounded-2xl shadow-lg py-2 min-w-[220px] transition-all duration-200
                                 ${collapsed
                                     ? 'left-full ml-3 bottom-0 -translate-y-4'
                                     : 'bottom-full left-0 right-0 mb-2'
@@ -179,9 +203,9 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                             `}
                         >
                             {/* ─── Profile Card ───────────────────────── */}
-                            <div className="flex flex-col items-center px-4 py-4 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
+                            <div className="flex flex-col items-center px-4 py-4 border-b border-gray-100 bg-gray-50/30 rounded-t-2xl">
                                 <div
-                                    className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-2xl font-bold mb-2 shadow-md select-none overflow-hidden"
+                                    className="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-2xl font-bold mb-2 shadow-sm ring-2 ring-blue-900/10 select-none"
                                     style={{ fontSize: '1.5rem', lineHeight: '1' }}
                                 >
                                     {getDepartmentShort(user?.department)}
@@ -197,7 +221,7 @@ export default function Sidebar({ collapsed, toggleCollapse }) {
                             {/* ─── Logout Button ──────────────────────── */}
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition rounded-b-lg font-medium"
+                                className="flex items-center w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50/50 transition rounded-b-2xl font-medium"
                             >
                                 <FiLogOut className="w-4 h-4 mr-3" />
                                 Logout

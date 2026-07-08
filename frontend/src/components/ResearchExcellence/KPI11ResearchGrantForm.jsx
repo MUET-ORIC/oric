@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import { submitKpi } from "../../api/submissions";
 import Field from "../common/Field";
 import { departments } from "../../utils/constants";
@@ -36,7 +36,6 @@ export default function KPI11ResearchGrantForm() {
     });
     const [loading, setLoading] = useState(false);
     const [showReview, setShowReview] = useState(false);
-    const fileInputRef = useRef(null);
 
     const handleChange = useCallback((e) => {
         const { name, type, value, files } = e.target;
@@ -68,7 +67,7 @@ export default function KPI11ResearchGrantForm() {
     };
 
     const submit = async () => {
-        const loadingToast = showLoading('Submitting...', 'Please wait while your data is being saved.');
+        const loadingToast = showLoading('Submitting...', 'Please wait...');
         try {
             const { document, department, ...fields } = form;
             await submitKpi('ResearchExcellence', 'KPI11', user.department || department, fields, document);
@@ -78,11 +77,10 @@ export default function KPI11ResearchGrantForm() {
                 governmentBody: "", presentationDate: "", piName: "", designation: "", department: user.department || "",
                 areaAdvocated: "", brief: "", coalitionPartners: "", issueVerification: "", backingResearch: "", advocacyTools: "", document: null,
             });
-            if (fileInputRef.current) fileInputRef.current.value = "";
             setShowReview(false);
         } catch (err) {
             dismissToast(loadingToast);
-            showError('Submission Failed', err.response?.data?.message || 'Something went wrong. Please try again.');
+            showError('Submission Failed', err.response?.data?.message || 'Something went wrong.');
         }
     };
 
@@ -99,24 +97,28 @@ export default function KPI11ResearchGrantForm() {
                 <Field label="Name of Government Body Presented" name="governmentBody" value={form.governmentBody} onChange={handleChange} placeholder="e.g. HEC" required />
                 <Field label="Date of Presentation" name="presentationDate" type="date" value={form.presentationDate} onChange={handleChange} />
                 <Field label="Name of PI" name="piName" value={form.piName} onChange={handleChange} placeholder="Dr. John Doe" required />
-                <Field label="Designation of PI" name="designation" value={form.designation} onChange={handleChange} placeholder="Professor" />
+                <Field label="Designation of PI" name="designation" value={form.designation} onChange={handleChange} />
                 <Field label="Department of PI" name="department" type="select" value={form.department} onChange={handleChange} options={departments} required disabled />
-                <Field label="Area Advocated" name="areaAdvocated" value={form.areaAdvocated} onChange={handleChange} placeholder="e.g. Policy on AI" />
-                <Field label="Brief" name="brief" type="textarea" value={form.brief} onChange={handleChange} placeholder="Brief description of advocacy" />
-                <Field label="Coalition Partners in Advocacy" name="coalitionPartners" value={form.coalitionPartners} onChange={handleChange} placeholder="e.g. NUST, HEC" />
-                <Field label="Issue Verification" name="issueVerification" value={form.issueVerification} onChange={handleChange} placeholder="Status of issue verification" />
-                <Field label="Backing Research Status" name="backingResearch" value={form.backingResearch} onChange={handleChange} placeholder="e.g. Completed, Ongoing" />
-                <Field label="Advocacy Tools Adopted" name="advocacyTools" value={form.advocacyTools} onChange={handleChange} placeholder="e.g. Brief, Presentation" />
+                <Field label="Area Advocated" name="areaAdvocated" value={form.areaAdvocated} onChange={handleChange} />
+                <Field label="Brief" name="brief" type="textarea" value={form.brief} onChange={handleChange} />
+                <Field label="Coalition Partners in Advocacy" name="coalitionPartners" value={form.coalitionPartners} onChange={handleChange} />
+                <Field label="Issue Verification" name="issueVerification" value={form.issueVerification} onChange={handleChange} />
+                <Field label="Backing Research Status" name="backingResearch" value={form.backingResearch} onChange={handleChange} />
+                <Field label="Advocacy Tools Adopted" name="advocacyTools" value={form.advocacyTools} onChange={handleChange} />
             </div>
 
             <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                        Annex Page Ref. (Policy / Case Study Brief Copy)
-                        <span className="text-red-500 text-base">*</span>
-                    </label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <input ref={fileInputRef} type="file" name="document" accept=".pdf,application/pdf" onChange={handleChange} className="w-full sm:w-auto px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm transition-all focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:text-sm file:font-medium hover:file:bg-blue-100" required />
+                <div className="flex flex-col gap-3">
+                    <Field
+                        label="Annex Page Ref. (Policy / Case Study Brief Copy)"
+                        name="document"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleChange}
+                        required
+                        maxSize={0.4 * 1024 * 1024}
+                    />
+                    <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-500 truncate max-w-xs">
                             {fileName !== "No file selected" ? (
                                 <span className="flex items-center gap-2">
@@ -131,7 +133,7 @@ export default function KPI11ResearchGrantForm() {
                             )}
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 5MB).</p>
+                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 0.4 MB).</p>
                 </div>
             </div>
 

@@ -14,7 +14,17 @@ exports.register = async (req, res) => {
         const user = new User({ username, password: hashed, department, role: role || 'department' });
         await user.save();
         const token = generateToken(user);
-        res.status(201).json({ success: true, token, user: { id: user._id, username, department, role: user.role } });
+        // Set HTTP‑only cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.status(201).json({
+            success: true,
+            user: { id: user._id, username, department, role: user.role }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
@@ -29,9 +39,27 @@ exports.login = async (req, res) => {
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(401).json({ success: false, message: 'Invalid credentials' });
         const token = generateToken(user);
-        res.json({ success: true, token, user: { id: user._id, username, department: user.department, role: user.role } });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+        res.json({
+            success: true,
+            user: { id: user._id, username, department: user.department, role: user.role }
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
     }
+};
+
+exports.logout = (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+    });
+    res.json({ success: true, message: 'Logged out' });
 };

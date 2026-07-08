@@ -1,44 +1,52 @@
+// context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
-// ─── Safe JSON parser ──────────────────────────────────────────
 const getUserFromStorage = () => {
     try {
         const data = localStorage.getItem('user');
         if (!data) return null;
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (typeof parsed === 'object' && parsed !== null && parsed.username) {
+            return parsed;
+        }
+        return null;
     } catch {
-        // Invalid JSON → clear it to prevent further errors
         localStorage.removeItem('user');
         return null;
     }
 };
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(getUserFromStorage());
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const userData = getUserFromStorage();
-        if (token && userData) {
-            setUser(userData);
-        } else {
-            // If token exists but user data is missing, clear token
-            if (token) localStorage.removeItem('token');
-        }
-        setLoading(false);
+        const verify = async () => {
+            if (user) {
+                try {
+                    await axios.get(`${import.meta.env.VITE_API_URL}/api/my-submissions`);
+                } catch {
+                    localStorage.removeItem('user');
+                    setUser(null);
+                }
+            }
+            setLoading(false);
+        };
+        verify();
     }, []);
 
-    const login = (userData, token) => {
-        localStorage.setItem('token', token);
+    const login = (userData) => {
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
     };
 
-    const logout = () => {
-        localStorage.removeItem('token');
+    const logout = async () => {
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`);
+        } catch { }
         localStorage.removeItem('user');
         setUser(null);
     };

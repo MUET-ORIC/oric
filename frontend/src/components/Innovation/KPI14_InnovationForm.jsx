@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import { submitKpi } from "../../api/submissions";
 import Field from "../common/Field";
 import { departments } from "../../utils/constants";
@@ -34,7 +34,6 @@ export default function KPI14_InnovationForm() {
     });
     const [loading, setLoading] = useState(false);
     const [showReview, setShowReview] = useState(false);
-    const fileInputRef = useRef(null);
 
     const handleChange = useCallback((e) => {
         const { name, type, value, files } = e.target;
@@ -76,7 +75,6 @@ export default function KPI14_InnovationForm() {
                 name: "", designation: "", department: user.department || "", title: "",
                 category: "", nationalInternational: "", event: "", outcome: "", remarks: "", document: null,
             });
-            if (fileInputRef.current) fileInputRef.current.value = "";
             setShowReview(false);
         } catch (err) {
             dismissToast(loadingToast);
@@ -106,12 +104,17 @@ export default function KPI14_InnovationForm() {
             </div>
 
             <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                        Annex Page Ref. No. <span className="text-red-500 text-base">*</span>
-                    </label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <input ref={fileInputRef} type="file" name="document" accept=".pdf,application/pdf" onChange={handleChange} className="w-full sm:w-auto px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm transition-all focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:text-sm file:font-medium hover:file:bg-blue-100" required />
+                <div className="flex flex-col gap-3">
+                    <Field
+                        label="Annex Page Ref. No."
+                        name="document"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleChange}
+                        required
+                        maxSize={0.4 * 1024 * 1024}
+                    />
+                    <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-500 truncate max-w-xs">
                             {fileName !== "No file selected" ? (
                                 <span className="flex items-center gap-2">
@@ -126,7 +129,7 @@ export default function KPI14_InnovationForm() {
                             )}
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 5MB).</p>
+                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 0.4 MB).</p>
                 </div>
             </div>
 

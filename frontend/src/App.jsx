@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -22,25 +23,13 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageSubmissions from './pages/admin/ManageSubmissions';
 import SubmissionDetailPage from './pages/admin/SubmissionDetailPage';
 
-// ─── Axios Interceptor ──────────────────────────────────────────────
-axios.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error)
-);
+axios.defaults.withCredentials = true;
 
-// ─── App Content ─────────────────────────────────────────────────────
 function AppContent() {
   const { user, loading } = useAuth();
   const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // ─── Loading State ──────────────────────────────────────────────
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -52,52 +41,44 @@ function AppContent() {
     );
   }
 
-  // ─── Main Layout ─────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-50 flex">
-      {/* ─── Sidebar ───────────────────────────────────────────── */}
       {user && (
         <Sidebar
           collapsed={sidebarCollapsed}
           toggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
         />
       )}
-
-      {/* ─── Main Content ──────────────────────────────────────── */}
       <div
         className={`flex-1 transition-all duration-300 ${user ? (sidebarCollapsed ? 'ml-16' : 'ml-64') : 'ml-0'
           }`}
       >
-        {/* ─── Navbar ─────────────────────────────────────────── */}
         {user && <Navbar />}
-
-        {/* ─── Page Content with Transitions ────────────────── */}
         <main className="p-4 md:p-6">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-              {/* ─── Public Routes ──────────────────────── */}
-              <Route
-                path="/login"
-                element={<PageTransition><Login /></PageTransition>}
-              />
+              {/* Public route */}
+              <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
 
-              {/* ─── Department Routes ──────────────────── */}
+              {/* ─── Department Routes ─────────────────────────────── */}
               <Route element={<ProtectedRoute allowedRoles={['department']} />}>
-                <Route path="/" element={<PageTransition><DepartmentDashboard /></PageTransition>} />
+                {/* Root redirects to department dashboard */}
+                <Route path="/" element={<Navigate to="/department" replace />} />
+                <Route path="/department" element={<PageTransition><DepartmentDashboard /></PageTransition>} />
                 <Route path="/research" element={<PageTransition><ResearchExcellence /></PageTransition>} />
                 <Route path="/innovation" element={<PageTransition><InnovationCommercialization /></PageTransition>} />
                 <Route path="/sustainability" element={<PageTransition><SustainabilityCapacityBuilding /></PageTransition>} />
                 <Route path="/my-submissions" element={<PageTransition><MySubmissionsPage /></PageTransition>} />
               </Route>
 
-              {/* ─── Admin Routes ───────────────────────── */}
+              {/* ─── Admin Routes ──────────────────────────────────── */}
               <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
                 <Route path="/admin" element={<PageTransition><AdminDashboard /></PageTransition>} />
                 <Route path="/admin/submissions" element={<PageTransition><ManageSubmissions /></PageTransition>} />
                 <Route path="/admin/submissions/:id" element={<PageTransition><SubmissionDetailPage /></PageTransition>} />
               </Route>
 
-              {/* ─── Fallback ───────────────────────────── */}
+              {/* ─── Catch‑all Redirect ───────────────────────────── */}
               <Route
                 path="*"
                 element={
@@ -106,9 +87,10 @@ function AppContent() {
                       user
                         ? user.role === 'admin'
                           ? '/admin'
-                          : '/research'
+                          : '/department'
                         : '/login'
                     }
+                    replace
                   />
                 }
               />
@@ -116,28 +98,11 @@ function AppContent() {
           </AnimatePresence>
         </main>
       </div>
-
-      {/* ─── Global Toaster ────────────────────────────────────── */}
-      <Toaster
-        position="top-right"
-        gutter={12}
-        containerStyle={{ marginTop: '20px', marginRight: '20px' }}
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: 'transparent',
-            padding: 0,
-            boxShadow: 'none',
-            borderRadius: 0,
-            maxWidth: '420px',
-          },
-        }}
-      />
+      <Toaster position="top-right" />
     </div>
   );
 }
 
-// ─── App ────────────────────────────────────────────────────────────
 export default function App() {
   return (
     <AuthProvider>

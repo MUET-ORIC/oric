@@ -1,6 +1,19 @@
 import React from "react";
+import { showWarning } from "../../utils/toast";
 
-const Field = ({ label, name, type = "text", value, onChange, placeholder, accept, required, options = [], disabled = false }) => {
+const Field = ({
+    label,
+    name,
+    type = "text",
+    value,
+    onChange,
+    placeholder,
+    accept,
+    required,
+    options = [],
+    disabled = false,
+    maxSize = null, // in bytes (e.g., 0.4 * 1024 * 1024)
+}) => {
     const id = `field-${name}`;
 
     const baseClass = `
@@ -10,6 +23,28 @@ const Field = ({ label, name, type = "text", value, onChange, placeholder, accep
         transition-all duration-200 hover:border-blue-300
         disabled:bg-slate-50 disabled:cursor-not-allowed
     `;
+
+    const handleFileChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) {
+            onChange(e);
+            return;
+        }
+
+        // ─── Validate file size ──────────────────────────────────────
+        if (maxSize && file.size > maxSize) {
+            const maxSizeKB = (maxSize / 1024).toFixed(0);
+            showWarning('File Too Large', `PDF must be under ${maxSizeKB} KB.`);
+            e.target.value = ''; // clear input
+            // Optionally, call onChange with null or an empty event
+            const emptyEvent = { target: { name, type: 'file', files: null, value: '' } };
+            onChange(emptyEvent);
+            return;
+        }
+
+        // ─── Pass to parent ─────────────────────────────────────────
+        onChange(e);
+    };
 
     return (
         <div className="flex flex-col gap-1.5 w-full">
@@ -51,7 +86,7 @@ const Field = ({ label, name, type = "text", value, onChange, placeholder, accep
                         type="file"
                         name={name}
                         accept={accept || ".pdf,application/pdf"}
-                        onChange={onChange}
+                        onChange={handleFileChange}   // ← custom handler
                         className={`${baseClass} file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:text-sm file:font-medium hover:file:bg-blue-100 transition-colors`}
                         required={required}
                     />

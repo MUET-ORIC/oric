@@ -3,16 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showSuccess, showError, showWarning } from "../../utils/toast";
-import {
-    FiUser,
-    FiLock,
-    FiArrowRight,
-    FiShield,
-    FiBriefcase,
-    FiCheckCircle,
-    FiChevronDown
-} from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+import { FiUser, FiLock, FiLogIn, FiShield, FiBriefcase, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/oric-muet-eesd2026.jpeg";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -27,7 +18,6 @@ export default function Login() {
     const [loginRole, setLoginRole] = useState("department");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState(null);
     const dropdownRef = useRef(null);
 
     const departments = [
@@ -83,7 +73,7 @@ export default function Login() {
             const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
 
             if (res.data.success) {
-                const { user, token } = res.data;
+                const { user } = res.data;
 
                 if (loginRole === "admin" && user.role !== "admin") {
                     showError("Access Denied", "This account is not registered as an administrator.");
@@ -106,7 +96,7 @@ export default function Login() {
                     return;
                 }
 
-                login(user, token);
+                login(user);
                 showSuccess("Welcome Back!", `${user.username}, you have successfully logged in.`);
                 navigate(user.role === "admin" ? "/admin" : "/research");
             } else {
@@ -119,157 +109,53 @@ export default function Login() {
         }
     };
 
-    // ─── Animation Variants ──────────────────────────────────────────────
-    const containerVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.5,
-                ease: [0.22, 1, 0.36, 1],
-                when: "beforeChildren",
-                staggerChildren: 0.08
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 10 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-        }
-    };
-
-    const logoVariants = {
-        hidden: { scale: 0.8, opacity: 0 },
-        visible: {
-            scale: 1,
-            opacity: 1,
-            transition: {
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-                delay: 0.1
-            }
-        }
-    };
-
-    const buttonVariants = {
-        idle: { scale: 1 },
-        hover: {
-            scale: 1.02,
-            transition: { type: "spring", stiffness: 400, damping: 10 }
-        },
-        tap: {
-            scale: 0.97,
-            transition: { type: "spring", stiffness: 400, damping: 10 }
-        }
-    };
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="w-full max-w-4xl bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row"
-            >
-                {/* ─── Left Panel – Branding ──────────────────────────────── */}
-                <div className="w-full md:w-2/5 bg-gradient-to-br from-blue-900 to-blue-800 p-8 md:p-10 flex flex-col items-center justify-center text-center relative overflow-hidden">
-                    {/* Animated background pattern */}
-                    <motion.div
-                        className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyek0zNiAyNHYySDI0di0yaDEyeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"
-                        animate={{
-                            scale: [1, 1.05, 1],
-                            rotate: [0, 2, 0]
-                        }}
-                        transition={{
-                            duration: 20,
-                            repeat: Infinity,
-                            ease: "linear"
-                        }}
-                    />
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-blue-100 p-4">
+            <div className="w-full max-w-5xl bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden flex flex-col md:flex-row animate-fadeInUp">
+                {/* Left Panel – Branding */}
+                <div className="w-full md:w-2/5 bg-gradient-to-br from-blue-900 to-indigo-800 p-8 md:p-10 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                    <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float-slow" />
+                    <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl animate-float-delayed" />
 
                     <div className="relative z-10 flex flex-col items-center">
-                        <motion.div
-                            variants={logoVariants}
-                            className="mb-5"
-                        >
-                            <img src={logo} alt="ORIC MUET" className="w-20 h-20 rounded-2xl shadow-lg" />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants}>
-                            <h1 className="text-2xl font-bold text-white tracking-tight">ORIC MUET</h1>
-                            <p className="text-blue-200/80 text-sm mt-0.5">KPI Management Portal</p>
-                        </motion.div>
-
-                        <motion.div
-                            variants={itemVariants}
-                            className="mt-4 w-12 h-0.5 bg-blue-400/60 rounded-full"
-                        />
-
-                        <motion.p
-                            variants={itemVariants}
-                            className="text-blue-100/70 text-sm mt-4 leading-relaxed max-w-xs"
-                        >
-                            Streamline your KPI submissions, track progress, and generate reports – all in one place.
-                        </motion.p>
-
-                        <motion.div
-                            variants={itemVariants}
-                            className="mt-6 space-y-2 text-xs text-blue-200/60"
-                        >
-                            {["Secure & reliable", "Real‑time dashboard", "Exportable reports"].map((text, i) => (
-                                <motion.div
-                                    key={i}
-                                    className="flex items-center gap-2 justify-center"
-                                    whileHover={{ x: 4 }}
-                                    transition={{ type: "spring", stiffness: 300 }}
-                                >
-                                    <FiCheckCircle className="w-3.5 h-3.5 text-blue-300" />
-                                    <span>{text}</span>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-
-                        <motion.div
-                            variants={itemVariants}
-                            className="mt-8 text-blue-300/40 text-xs"
-                        >
-                            &copy; {new Date().getFullYear()} ORIC MUET
-                        </motion.div>
+                        <div className="relative mb-4">
+                            <img
+                                src={logo}
+                                alt="ORIC MUET"
+                                className="w-28 h-28 rounded-2xl shadow-2xl border-2 border-white/20 object-contain animate-breathing"
+                            />
+                            <div className="absolute -inset-2 bg-blue-400/20 rounded-3xl blur-2xl -z-10 animate-pulse-slow" />
+                        </div>
+                        <h1 className="text-3xl font-bold text-white tracking-tight">ORIC MUET</h1>
+                        <p className="text-blue-200/90 text-sm mt-1 font-light">KPI Management Portal</p>
+                        <div className="w-16 h-0.5 bg-blue-400/60 rounded-full my-3" />
+                        <p className="text-blue-100/70 text-sm leading-relaxed max-w-xs">
+                            Streamline your KPI submissions, track progress, and generate insightful reports.
+                        </p>
+                        <div className="mt-6 flex gap-2 flex-wrap justify-center">
+                            <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/80 border border-white/10">Secure</span>
+                            <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/80 border border-white/10">Real‑time</span>
+                            <span className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs text-white/80 border border-white/10">Efficient</span>
+                        </div>
                     </div>
                 </div>
 
-                {/* ─── Right Panel – Login Form ────────────────────────────── */}
+                {/* Right Panel – Form */}
                 <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
                     <div className="max-w-sm mx-auto w-full">
-                        <motion.div variants={itemVariants}>
-                            <h2 className="text-2xl font-bold text-slate-800">Welcome back</h2>
-                            <p className="text-sm text-slate-500 mt-1">Sign in to access your dashboard</p>
-                        </motion.div>
+                        <h2 className="text-2xl font-bold text-slate-800">Welcome back</h2>
+                        <p className="text-sm text-slate-500 mt-1">Sign in to access your dashboard</p>
 
-                        {/* ─── Role Toggle ──────────────────────────────────── */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="flex bg-slate-100 rounded-xl p-1 mt-6 relative"
-                        >
-                            <motion.div
-                                className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-lg shadow-sm"
-                                animate={{
-                                    x: loginRole === "department" ? 0 : "calc(100% + 4px)"
-                                }}
-                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        {/* Role toggle – sliding pill */}
+                        <div className="relative flex bg-slate-100/80 backdrop-blur-sm rounded-2xl p-1.5 mt-6 border border-white/50 shadow-inner">
+                            <div
+                                className={`absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-white rounded-xl shadow-md shadow-blue-100/50 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${loginRole === "department" ? "left-1.5" : "left-[calc(50%+3px)]"
+                                    }`}
                             />
                             <button
                                 type="button"
                                 onClick={() => setLoginRole("department")}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 relative z-10 ${loginRole === "department"
-                                    ? "text-blue-900"
-                                    : "text-slate-500 hover:text-slate-700"
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 relative z-10 ${loginRole === "department" ? "text-blue-900" : "text-slate-500 hover:text-slate-700"
                                     }`}
                             >
                                 <FiBriefcase className="w-4 h-4" />
@@ -278,179 +164,133 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={() => setLoginRole("admin")}
-                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 relative z-10 ${loginRole === "admin"
-                                    ? "text-blue-900"
-                                    : "text-slate-500 hover:text-slate-700"
+                                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-colors duration-200 relative z-10 ${loginRole === "admin" ? "text-blue-900" : "text-slate-500 hover:text-slate-700"
                                     }`}
                             >
                                 <FiShield className="w-4 h-4" />
                                 Admin
                             </button>
-                        </motion.div>
+                        </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-                            {/* ─── Username ──────────────────────────────────── */}
-                            <motion.div variants={itemVariants}>
-                                <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                                    Username
-                                </label>
-                                <motion.div
-                                    className="relative"
-                                    animate={{
-                                        scale: focusedField === "username" ? 1.01 : 1
-                                    }}
-                                    transition={{ type: "spring", stiffness: 400 }}
-                                >
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            <div>
+                                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider">Username</label>
+                                <div className="relative group">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
                                         <FiUser className="w-4 h-4" />
                                     </div>
                                     <input
                                         type="text"
                                         value={username}
                                         onChange={(e) => setUsername(e.target.value)}
-                                        onFocus={() => setFocusedField("username")}
-                                        onBlur={() => setFocusedField(null)}
-                                        className="w-full pl-9 pr-3 py-3 bg-white border border-slate-200 rounded-xl focus:border-blue-500 transition-colors text-sm text-slate-700 placeholder:text-slate-400 outline-none hover:border-slate-300"
+                                        className="w-full pl-9 pr-3 py-3 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 text-sm text-slate-700 placeholder:text-slate-400 outline-none hover:border-slate-300"
                                         placeholder="Enter your username"
                                         required
                                     />
-                                </motion.div>
-                            </motion.div>
+                                </div>
+                            </div>
 
-                            {/* ─── Password ──────────────────────────────────── */}
-                            <motion.div variants={itemVariants}>
-                                <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                                    Password
-                                </label>
-                                <motion.div
-                                    className="relative"
-                                    animate={{
-                                        scale: focusedField === "password" ? 1.01 : 1
-                                    }}
-                                    transition={{ type: "spring", stiffness: 400 }}
-                                >
-                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                            <div>
+                                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider">Password</label>
+                                <div className="relative group">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
                                         <FiLock className="w-4 h-4" />
                                     </div>
                                     <input
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        onFocus={() => setFocusedField("password")}
-                                        onBlur={() => setFocusedField(null)}
-                                        className="w-full pl-9 pr-3 py-3 bg-white border border-slate-200 rounded-xl focus:border-blue-500 transition-colors text-sm text-slate-700 placeholder:text-slate-400 outline-none hover:border-slate-300"
+                                        className="w-full pl-9 pr-3 py-3 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 text-sm text-slate-700 placeholder:text-slate-400 outline-none hover:border-slate-300"
                                         placeholder="Enter your password"
                                         required
                                     />
-                                </motion.div>
-                            </motion.div>
+                                </div>
+                            </div>
 
-                            {/* ─── Department Dropdown ───────────────────────── */}
-                            {loginRole === "department" && (
-                                <motion.div
-                                    variants={itemVariants}
-                                    className="relative"
-                                    ref={dropdownRef}
-                                >
-                                    <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                                        Department
-                                    </label>
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className={`w-full flex items-center justify-between px-3 py-3 bg-white border border-slate-200 rounded-xl hover:border-slate-300 transition-colors text-sm ${department ? "text-slate-700" : "text-slate-400"
-                                            }`}
-                                    >
-                                        <span className="truncate">{department || "Select your department"}</span>
-                                        <motion.div
-                                            animate={{ rotate: isDropdownOpen ? 180 : 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <FiChevronDown className="w-4 h-4 text-slate-400" />
-                                        </motion.div>
-                                    </button>
-
-                                    <AnimatePresence>
-                                        {isDropdownOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -8, scale: 0.97 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: -8, scale: 0.97 }}
-                                                transition={{ duration: 0.15, ease: "easeOut" }}
-                                                className="absolute left-0 right-0 top-full mt-1 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-xl shadow-lg z-50"
-                                            >
-                                                <div className="p-1">
-                                                    {departments.map((dept) => (
-                                                        <button
-                                                            key={dept}
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setDepartment(dept);
-                                                                setIsDropdownOpen(false);
-                                                            }}
-                                                            className={`w-full text-left px-3 py-2.5 text-sm rounded-lg transition-colors ${department === dept
-                                                                ? "bg-blue-50 text-blue-900 font-medium"
-                                                                : "text-slate-600 hover:bg-slate-50"
-                                                                }`}
-                                                        >
-                                                            {dept}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                            )}
-
-                            {/* ─── Submit Button ────────────────────────────── */}
-                            <motion.div variants={itemVariants}>
-                                <motion.button
-                                    type="submit"
-                                    disabled={loading}
-                                    variants={buttonVariants}
-                                    initial="idle"
-                                    whileHover="hover"
-                                    whileTap="tap"
-                                    className="w-full py-3.5 bg-blue-900 text-white font-semibold rounded-xl hover:bg-blue-800 transition-colors shadow-sm hover:shadow-md disabled:opacity-60 flex items-center justify-center gap-2"
-                                >
-                                    {loading ? (
-                                        <div className="flex items-center gap-2">
-                                            <motion.div
-                                                className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
-                                                animate={{ rotate: 360 }}
-                                                transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                                            />
-                                            <span>Signing in...</span>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <span>Sign In</span>
-                                            <motion.div
-                                                animate={{ x: 0 }}
-                                                whileHover={{ x: 4 }}
-                                                transition={{ type: "spring", stiffness: 300 }}
-                                            >
-                                                <FiArrowRight className="w-4 h-4" />
-                                            </motion.div>
-                                        </>
-                                    )}
-                                </motion.button>
-                            </motion.div>
-
-                            <motion.p
-                                variants={itemVariants}
-                                className="text-center text-xs text-slate-400 pt-1"
+                            {/* Department field – dropdown opens upward */}
+                            <div
+                                className={`transition-all duration-300 ease-in-out ${loginRole === "department" && isDropdownOpen ? "overflow-visible" : "overflow-hidden"
+                                    }`}
                             >
-                                {loginRole === "admin"
-                                    ? "Administrator access is restricted."
-                                    : "Select your department to continue."
-                                }
-                            </motion.p>
+                                <div
+                                    className={`${loginRole === "department" ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                                        } transition-all duration-300 ease-in-out`}
+                                >
+                                    {loginRole === "department" && (
+                                        <div className="relative" ref={dropdownRef}>
+                                            <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider">Department</label>
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                                className={`w-full flex items-center justify-between px-3 py-3 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl hover:border-slate-300 transition-all duration-200 text-sm ${department ? "text-slate-700" : "text-slate-400"
+                                                    } focus:outline-none focus:ring-2 focus:ring-blue-200`}
+                                            >
+                                                <span className="truncate">{department || "Select your department"}</span>
+                                                <FiChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""
+                                                    }`} />
+                                            </button>
+
+                                            {/* Dropdown positioned above the button */}
+                                            <div className="absolute left-0 right-0 bottom-full mb-1 z-50">
+                                                <div
+                                                    className={`${isDropdownOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+                                                        } transition-all duration-200 ease-in-out overflow-y-auto`}
+                                                    style={{
+                                                        scrollbarWidth: 'thin',
+                                                        scrollbarColor: '#94a3b8 #f1f5f9',
+                                                    }}
+                                                >
+                                                    {isDropdownOpen && (
+                                                        <div className="bg-white/90 backdrop-blur-md border border-slate-200 rounded-xl shadow-lg py-1">
+                                                            {departments.map((dept) => (
+                                                                <button
+                                                                    key={dept}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setDepartment(dept);
+                                                                        setIsDropdownOpen(false);
+                                                                    }}
+                                                                    className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${department === dept
+                                                                        ? "bg-blue-50 text-blue-900 font-medium"
+                                                                        : "text-slate-600 hover:bg-slate-50"
+                                                                        }`}
+                                                                >
+                                                                    {dept}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="relative w-full py-3.5 bg-gradient-to-r from-blue-900 to-indigo-800 text-white font-semibold rounded-xl overflow-hidden shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 transition-all duration-200 active:scale-[0.98] disabled:opacity-60 flex items-center justify-center gap-2 group"
+                            >
+                                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                                {loading ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        <span>Signing in...</span>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <span>Sign In</span>
+                                        <FiLogIn className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                    </>
+                                )}
+                            </button>
+
+                            <p className="text-xs text-center text-slate-400 mt-2">Secure login • Protected by SSL</p>
                         </form>
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 }

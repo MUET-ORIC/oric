@@ -175,7 +175,7 @@ export default function AdminDashboard() {
                     onClick={fetchStats}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition"
                 >
-                    <FiRefreshCw className="w-4 h-4" />
+                    {/* <FiRefreshCw className="w-4 h-4" /> */}
                     Retry
                 </button>
             </div>
@@ -187,13 +187,6 @@ export default function AdminDashboard() {
             {/* ─── Header ──────────────────────────────────────────────── */}
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="p-2 text-gray-500 hover:text-blue-900 hover:bg-blue-50 rounded-xl transition"
-                        aria-label="Go back"
-                    >
-                        <FiArrowLeft className="w-5 h-5" />
-                    </button>
                     <div className="flex items-center gap-3">
                         <div className="p-2.5 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl text-white shadow-md">
                             <FiPieChart className="w-6 h-6" />

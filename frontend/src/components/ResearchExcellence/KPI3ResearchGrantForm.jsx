@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import { submitKpi } from "../../api/submissions";
 import Field from "../common/Field";
 import { departments } from "../../utils/constants";
@@ -39,7 +39,6 @@ export default function KPI3ResearchGrantForm() {
     });
     const [loading, setLoading] = useState(false);
     const [showReview, setShowReview] = useState(false);
-    const fileInputRef = useRef(null);
 
     const handleChange = useCallback((e) => {
         const { name, type, value, files } = e.target;
@@ -71,7 +70,7 @@ export default function KPI3ResearchGrantForm() {
     };
 
     const submit = async () => {
-        const loadingToast = showLoading('Submitting...', 'Please wait while your data is being saved.');
+        const loadingToast = showLoading('Submitting...', 'Please wait...');
         try {
             const { document, department, ...fields } = form;
             await submitKpi('ResearchExcellence', 'KPI3', user.department || department, fields, document);
@@ -82,11 +81,10 @@ export default function KPI3ResearchGrantForm() {
                 thematic: "", title: "", startDate: "", endDate: "", funding: "", collaborators: "",
                 coFunding: "", status: "", remarks: "", document: null,
             });
-            if (fileInputRef.current) fileInputRef.current.value = "";
             setShowReview(false);
         } catch (err) {
             dismissToast(loadingToast);
-            showError('Submission Failed', err.response?.data?.message || 'Something went wrong. Please try again.');
+            showError('Submission Failed', err.response?.data?.message || 'Something went wrong.');
         }
     };
 
@@ -102,26 +100,30 @@ export default function KPI3ResearchGrantForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <Field label="Name of Research Grant" name="grantName" value={form.grantName} onChange={handleChange} placeholder="e.g. NRPU-2024" required />
                 <Field label="Name of PI" name="piName" value={form.piName} onChange={handleChange} placeholder="Dr. John Doe" required />
-                <Field label="Designation of PI" name="designation" value={form.designation} onChange={handleChange} placeholder="Professor / Associate Professor" />
+                <Field label="Designation of PI" name="designation" value={form.designation} onChange={handleChange} placeholder="Professor" />
                 <Field label="Department of PI" name="department" type="select" value={form.department} onChange={handleChange} options={departments} required disabled />
-                <Field label="Thematic Area" name="thematic" value={form.thematic} onChange={handleChange} placeholder="e.g. AI, Renewable Energy" required />
-                <Field label="Title of Research Proposal" name="title" value={form.title} onChange={handleChange} placeholder="Enter full proposal title" required />
+                <Field label="Thematic Area" name="thematic" value={form.thematic} onChange={handleChange} placeholder="e.g. AI" required />
+                <Field label="Title of Research Proposal" name="title" value={form.title} onChange={handleChange} placeholder="Enter title" required />
                 <Field label="Duration (Starting Date)" name="startDate" type="date" value={form.startDate} onChange={handleChange} />
                 <Field label="Due Date (Scheduled Completion)" name="endDate" type="date" value={form.endDate} onChange={handleChange} required />
                 <Field label="Total Funding (PKR)" name="funding" value={form.funding} onChange={handleChange} placeholder="e.g. 2,500,000" required />
-                <Field label="Collaborating Partner(s) Details" name="collaborators" value={form.collaborators} onChange={handleChange} placeholder="e.g. NUST, Industry X" />
-                <Field label="Co Funding Partner(s) Details" name="coFunding" value={form.coFunding} onChange={handleChange} placeholder="e.g. HEC, PAK-UK" />
-                <Field label="Status" name="status" value={form.status} onChange={handleChange} placeholder="e.g. In Process, Delayed" />
+                <Field label="Collaborating Partner(s) Details" name="collaborators" value={form.collaborators} onChange={handleChange} />
+                <Field label="Co Funding Partner(s) Details" name="coFunding" value={form.coFunding} onChange={handleChange} />
+                <Field label="Status" name="status" value={form.status} onChange={handleChange} />
             </div>
 
             <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-                <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-semibold text-slate-700 flex items-center gap-1">
-                        Annex Page Ref. No. (Completion Letter Copy)
-                        <span className="text-red-500 text-base">*</span>
-                    </label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                        <input ref={fileInputRef} type="file" name="document" accept=".pdf,application/pdf" onChange={handleChange} className="w-full sm:w-auto px-4 py-3 rounded-xl border border-slate-200 bg-white text-sm transition-all focus:ring-2 focus:ring-blue-500 focus:border-transparent hover:border-blue-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:text-sm file:font-medium hover:file:bg-blue-100" required />
+                <div className="flex flex-col gap-3">
+                    <Field
+                        label="Annex Page Ref. No. (Completion Letter Copy)"
+                        name="document"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleChange}
+                        required
+                        maxSize={0.4 * 1024 * 1024}
+                    />
+                    <div className="flex items-center gap-2">
                         <span className="text-sm text-slate-500 truncate max-w-xs">
                             {fileName !== "No file selected" ? (
                                 <span className="flex items-center gap-2">
@@ -136,12 +138,12 @@ export default function KPI3ResearchGrantForm() {
                             )}
                         </span>
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 5MB).</p>
+                    <p className="text-xs text-slate-400 mt-1">Only .PDF files accepted (max 0.4 MB).</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1">
-                <Field label="Remarks / Any other information" name="remarks" type="textarea" value={form.remarks} onChange={handleChange} placeholder="Any additional information or comments..." />
+                <Field label="Remarks / Any other information" name="remarks" type="textarea" value={form.remarks} onChange={handleChange} placeholder="Any additional information..." />
             </div>
 
             <button onClick={goToReview} disabled={loading} className="w-full py-4 bg-blue-900 text-white rounded-2xl font-semibold hover:bg-blue-800 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-3 group disabled:opacity-70">
