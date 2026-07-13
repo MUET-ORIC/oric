@@ -244,14 +244,23 @@ function StepCard({ step, icon: Icon, title, children }) {
 }
 
 import junaidImage from '../../assets/junaidImage.webp'
-import directorImage from '../../assets/Director_img-Bvhy4KxR.jpeg'
+import directorImage from '../../assets/director.png'
+import azizImage from '../../assets/aziz.png'
+import gulImage from '../../assets/gul.png'
+import harisImage from '../../assets/haris.png'
 
 // ─── Team Credits ──────────────────────────────────────────────
 function TeamCredits() {
 
     const team = [
         {
-            name: 'Junaid Ahmed',
+            name: 'Dr. Sheeraz Ahmed Memon',
+            role: 'Director – ORIC',
+            image: directorImage,
+            description: `Dr. Sheeraz provided the strategic vision and domain expertise essential for this project. He defined the KPI structure, identified key performance indicators, and guided the team to align the portal with ORIC’s objectives. He reviewed each KPI form to ensure they met real‑world requirements and provided continuous feedback throughout the development lifecycle. His leadership and mentorship were instrumental in bringing this project to fruition.`,
+        },
+        {
+            name: 'Junaid Ahmed Memon',
             role: 'Lead Developer – Full Stack (MERN)',
             image: junaidImage,
             description: `Junaid is the driving force behind this portal. He architected and developed the entire system from scratch, handling both the frontend (React) and backend (Node.js + Express). He implemented secure JWT authentication, role‑based access control, and all 42 dynamic KPI forms. He also built the admin dashboard with real‑time filtering, charts, CSV export, and full CRUD operations. His attention to detail and problem‑solving skills ensured a smooth, intuitive user experience for both department users and administrators.`,
@@ -260,24 +269,21 @@ function TeamCredits() {
         {
             name: 'Abdul Aziz Ujjan',
             role: 'Database Designer & Tester',
+            image: azizImage,
             description: `Abdul Aziz designed the MongoDB schema from the ground up, ensuring optimal performance and scalability. He created the complex data models for submissions, users, and file references, and implemented indexes to handle large datasets efficiently. He also conducted rigorous testing – both manual and automated – to ensure data integrity, security, and fast query responses. His work guarantees that the portal can handle thousands of submissions without slowing down.`,
             email: 'aziz.mniops@gmail.com',
         },
         {
-            name: 'Dr. Sheeraz Ahmed',
-            role: 'Director – ORIC',
-            image: directorImage,
-            description: `Dr. Sheeraz provided the strategic vision and domain expertise essential for this project. He defined the KPI structure, identified key performance indicators, and guided the team to align the portal with ORIC’s objectives. He reviewed each KPI form to ensure they met real‑world requirements and provided continuous feedback throughout the development lifecycle. His leadership and mentorship were instrumental in bringing this project to fruition.`,
+            name: 'Muhammad Haris Sheikh',
+            role: 'Administrator – ORIC',
+            image: harisImage,
+            description: `Muhammad Haris collaborated with Gul Hasan to gather comprehensive requirements and user stories. He facilitated workshops with department heads to understand their reporting needs, and translated those requirements into actionable tasks for the developers. He also performed extensive user acceptance testing (UAT) to ensure the portal meets ORIC’s quality standards. His commitment to excellence ensured that the final product is robust, reliable, and ready for university‑wide adoption.`,
         },
         {
             name: 'Gul Hasan Memon',
             role: 'Administrator – ORIC',
+            image: gulImage,
             description: `Gul Hasan played a pivotal role in shaping the user experience. He identified the common pain points faced by department users and administrators, and worked closely with the development team to turn those challenges into streamlined features. He validated every feature from an end‑user perspective, ensuring the portal is intuitive, accessible, and meets the daily operational needs of ORIC. His hands‑on testing and feedback were invaluable in refining the interface.`,
-        },
-        {
-            name: 'Muhammad Haris Sheikh',
-            role: 'Administrator – ORIC',
-            description: `Muhammad Haris collaborated with Gul Hasan to gather comprehensive requirements and user stories. He facilitated workshops with department heads to understand their reporting needs, and translated those requirements into actionable tasks for the developers. He also performed extensive user acceptance testing (UAT) to ensure the portal meets ORIC’s quality standards. His commitment to excellence ensured that the final product is robust, reliable, and ready for university‑wide adoption.`,
         },
     ];
 

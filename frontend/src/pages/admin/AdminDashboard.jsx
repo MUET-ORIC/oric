@@ -25,7 +25,6 @@ import {
 } from 'react-icons/fi';
 import { showSuccess, showError } from '../../utils/toast';
 
-// ─── Register Chart.js components ──────────────────────────────────────
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default function AdminDashboard() {
@@ -60,7 +59,6 @@ export default function AdminDashboard() {
         fetchStats();
     }, []);
 
-    // ─── Stats Cards ──────────────────────────────────────────────────
     const cards = [
         {
             label: 'Total Submissions',
@@ -92,32 +90,79 @@ export default function AdminDashboard() {
         },
     ];
 
-    // ─── Chart Data ────────────────────────────────────────────────────
     const hasChartData = stats.byDepartment && stats.byDepartment.length > 0;
 
+    // Sort departments by count descending for better readability
+    const sortedDepts = hasChartData
+        ? [...stats.byDepartment].sort((a, b) => b.count - a.count)
+        : [];
+
+    // ─── Complete Department Abbreviation Map (all 22 departments) ────
+    const deptAbbr = {
+        'Architecture': 'ARCH',
+        'Basic Sciences & Related Studies': 'BSRS',
+        'Bio-Medical Engineering': 'BME',
+        'Centre of English Language & Linguistics': 'CELL',
+        'Chemical Engineering': 'CHE',
+        'City & Regional Planning': 'CRP',
+        'Civil Engineering': 'CE',
+        'Computer Systems Engineering': 'CSE',
+        'Electrical Engineering': 'EE',
+        'Electronic Engineering': 'ELE',
+        'Environmental Engineering': 'ENV',
+        'Industrial Engineering & Management': 'IEM',
+        'Institute of Water Resources Engineering & Management': 'USPCASW',
+        'Mechanical Engineering': 'ME',
+        'Mechatronic Engineering': 'MECH',
+        'Metallurgy & Materials Engineering': 'MME',
+        'Mehran University Institute of Science, Technology & Development': 'MUISTD',
+        'Mining Engineering': 'MN',
+        'Petroleum & Natural Gas Engineering': 'PG',
+        'Software Engineering': 'SW',
+        'Telecommunication Engineering': 'TL',
+        'Textile Engineering': 'TXE',
+    };
+
+    // ─── Fallback abbreviation generator ──────────────────────────────
+    const getAbbr = (fullName) => {
+        if (deptAbbr[fullName]) return deptAbbr[fullName];
+        // Generate a short code from first letters of each word
+        const words = fullName.split(' ');
+        if (words.length === 1) return fullName.substring(0, 4).toUpperCase();
+        return words
+            .filter(word => word.length > 0)
+            .map(word => word[0].toUpperCase())
+            .join('')
+            .substring(0, 6);
+    };
+
     const chartData = {
-        labels: stats.byDepartment.map((d) => d._id),
+        labels: sortedDepts.map((d) => getAbbr(d._id)),
         datasets: [
             {
                 label: 'Submissions',
-                data: stats.byDepartment.map((d) => d.count),
+                data: sortedDepts.map((d) => d.count),
                 backgroundColor: [
-                    '#1e3a8a',
-                    '#2563eb',
-                    '#3b82f6',
-                    '#60a5fa',
-                    '#93c5fd',
-                    '#bfdbfe',
+                    '#1e3a8a', '#2563eb', '#3b82f6', '#60a5fa',
+                    '#93c5fd', '#bfdbfe', '#7c3aed', '#8b5cf6', '#a78bfa'
                 ],
                 borderRadius: 6,
                 borderSkipped: false,
+                barPercentage: 0.7,
             },
         ],
     };
 
     const chartOptions = {
+        indexAxis: 'y',
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 10,
+            },
+        },
         plugins: {
             legend: {
                 display: false,
@@ -128,10 +173,17 @@ export default function AdminDashboard() {
                 bodyColor: '#cbd5e1',
                 padding: 12,
                 cornerRadius: 8,
+                callbacks: {
+                    title: (tooltipItems) => {
+                        const index = tooltipItems[0].dataIndex;
+                        return sortedDepts[index]._id;   // full name in tooltip
+                    },
+                    label: (ctx) => `${ctx.parsed.x} submissions`,
+                },
             },
         },
         scales: {
-            y: {
+            x: {
                 beginAtZero: true,
                 grid: {
                     color: 'rgba(0,0,0,0.05)',
@@ -140,19 +192,23 @@ export default function AdminDashboard() {
                     stepSize: 1,
                 },
             },
-            x: {
+            y: {
                 grid: {
                     display: false,
                 },
                 ticks: {
-                    maxRotation: 45,
-                    minRotation: 0,
+                    font: {
+                        size: 12,
+                        weight: '600',
+                    },
+                    color: '#1f2937',
+                    maxRotation: 0,
+                    autoSkip: false,
                 },
             },
         },
     };
 
-    // ─── Loading ──────────────────────────────────────────────────────
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
@@ -175,7 +231,6 @@ export default function AdminDashboard() {
                     onClick={fetchStats}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition"
                 >
-                    {/* <FiRefreshCw className="w-4 h-4" /> */}
                     Retry
                 </button>
             </div>
@@ -234,17 +289,17 @@ export default function AdminDashboard() {
                 ))}
             </div>
 
-            {/* ─── Chart ────────────────────────────────────────────────── */}
-            <div className="bg-white rounded-xl border border-gray-100/80 p-6 shadow-sm">
+            {/* ─── Chart with reduced width ────────────────────────────── */}
+            <div className="bg-white rounded-xl border border-gray-100/80 p-6 shadow-sm max-w-4xl mx-auto">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="font-semibold text-gray-700 text-sm uppercase tracking-wider">
                         Submissions by Department
                     </h2>
                     <span className="text-xs text-gray-400">
-                        {hasChartData ? `${stats.byDepartment.length} departments` : 'No data'}
+                        {hasChartData ? `${sortedDepts.length} departments` : 'No data'}
                     </span>
                 </div>
-                <div className="h-72 w-full">
+                <div className="h-72 sm:h-80 md:h-96 w-full">
                     {hasChartData ? (
                         <Bar data={chartData} options={chartOptions} />
                     ) : (
@@ -282,8 +337,7 @@ export default function AdminDashboard() {
                     title="Department Overview"
                     description="View submissions by department"
                     onClick={() => {
-                        // Scroll to the chart section
-                        const chartElement = document.querySelector('.h-72');
+                        const chartElement = document.querySelector('.max-w-4xl');
                         if (chartElement) {
                             chartElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         } else {
@@ -297,7 +351,6 @@ export default function AdminDashboard() {
     );
 }
 
-// ─── Quick Action Component ────────────────────────────────────────────
 function QuickAction({ icon: Icon, title, description, onClick, color }) {
     const colors = {
         blue: 'bg-blue-50 text-blue-700 hover:bg-blue-100',
