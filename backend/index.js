@@ -14,7 +14,8 @@ connectDB();
 app.use(cors({
     origin: [
         process.env.CLIENT_URL || 'http://localhost:5173',
-        process.env.VITE_API_URL
+        process.env.VITE_API_URL,
+        'https://oric-muet-scorecard.netlify.app'
     ],
 
     credentials: true,               // allow cookies
