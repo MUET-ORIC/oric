@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         const verify = async () => {
             if (user) {
                 try {
-                    await axios.get(`${import.meta.env.VITE_API_URL}/api/my-submissions`);
+                    await axios.get(`/api/my-submissions`);
                 } catch {
                     localStorage.removeItem('user');
                     setUser(null);

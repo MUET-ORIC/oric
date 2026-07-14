@@ -1,5 +1,4 @@
 import axios from 'axios';
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const submitKpi = async (module, kpi, department, fields, pdfFile) => {
     const formData = new FormData();
@@ -14,13 +13,13 @@ export const submitKpi = async (module, kpi, department, fields, pdfFile) => {
     });
     formData.append('fields', JSON.stringify(fields));
     if (pdfFile) formData.append('pdfFile', pdfFile);
-    const res = await axios.post(`${API_BASE}/api/submit`, formData, {
+    const res = await axios.post(`/api/submit`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
     return res.data;
 };
 
 export const getMySubmissions = async () => {
-    const res = await axios.get(`${API_BASE}/api/my-submissions`);
+    const res = await axios.get(`/api/my-submissions`);
     return res.data;
 };

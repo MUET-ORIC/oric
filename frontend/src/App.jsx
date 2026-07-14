@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'react-hot-toast';
-import axios from 'axios';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // ─── Components ──────────────────────────────────────────────────────
@@ -21,10 +20,6 @@ import MySubmissionsPage from './pages/department/MySubmissionsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageSubmissions from './pages/admin/ManageSubmissions';
 import SubmissionDetailPage from './pages/admin/SubmissionDetailPage';
-
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-console.log("🔗 Axios is pointing to:", axios.defaults.baseURL);
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -63,7 +58,6 @@ function AppContent() {
 
               {/* ─── Department Routes ─────────────────────────────── */}
               <Route element={<ProtectedRoute allowedRoles={['department']} />}>
-                {/* Root redirects to department dashboard */}
                 <Route path="/" element={<Navigate to="/department" replace />} />
                 <Route path="/department" element={<PageTransition><DepartmentDashboard /></PageTransition>} />
                 <Route path="/research" element={<PageTransition><ResearchExcellence /></PageTransition>} />
