@@ -14,15 +14,18 @@ exports.register = async (req, res) => {
         const user = new User({ username, password: hashed, department, role: role || 'department' });
         await user.save();
         const token = generateToken(user);
-        // Set HTTP‑only cookie
+
+        // Set HTTP‑only cookie (backup method)
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
         res.status(201).json({
             success: true,
+            token: token,
             user: { id: user._id, username, department, role: user.role }
         });
     } catch (err) {
@@ -36,17 +39,24 @@ exports.login = async (req, res) => {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
         if (!user) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
         const match = await bcrypt.compare(password, user.password);
         if (!match) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
         const token = generateToken(user);
+
+        // Set HTTP‑only cookie (backup method)
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: true,
             sameSite: 'none',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
+
         res.json({
             success: true,
+            token: token,
             user: { id: user._id, username, department: user.department, role: user.role }
         });
     } catch (err) {
@@ -58,7 +68,7 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true,
         sameSite: 'none',
     });
     res.json({ success: true, message: 'Logged out' });

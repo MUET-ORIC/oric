@@ -6,7 +6,6 @@ import { showSuccess, showError, showWarning } from "../../utils/toast";
 import { FiUser, FiLock, FiLogIn, FiShield, FiBriefcase, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/oric-muet-eesd2026.jpeg";
 
-
 export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -72,8 +71,15 @@ export default function Login() {
             const res = await axios.post(`/auth/login`, { username, password });
 
             if (res.data.success) {
-                const { user } = res.data;
+                const { user, token } = res.data;  // ✅ Extract token from response
 
+                // ✅ Store token and set Authorization header
+                if (token) {
+                    localStorage.setItem('token', token);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                }
+
+                // Role and department checks (unchanged)
                 if (loginRole === "admin" && user.role !== "admin") {
                     showError("Access Denied", "This account is not registered as an administrator.");
                     setLoading(false);
@@ -95,7 +101,7 @@ export default function Login() {
                     return;
                 }
 
-                login(user);
+                login(user);  // AuthContext login (stores user in localStorage)
                 showSuccess("Welcome Back!", `${user.username}, you have successfully logged in.`);
                 navigate(user.role === "admin" ? "/admin" : "/research");
             } else {
@@ -110,6 +116,7 @@ export default function Login() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-blue-100 p-4">
+            {/* ... your existing JSX remains exactly the same ... */}
             <div className="w-full max-w-5xl bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 overflow-hidden flex flex-col md:flex-row animate-fadeInUp">
                 {/* Left Panel – Branding */}
                 <div className="w-full md:w-2/5 bg-gradient-to-br from-blue-900 to-indigo-800 p-8 md:p-10 flex flex-col justify-center items-center text-center relative overflow-hidden">
@@ -172,6 +179,7 @@ export default function Login() {
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+                            {/* ... the form fields remain unchanged ... */}
                             <div>
                                 <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wider">Username</label>
                                 <div className="relative group">
