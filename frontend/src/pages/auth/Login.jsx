@@ -6,7 +6,7 @@ import { showSuccess, showError, showWarning } from "../../utils/toast";
 import { FiUser, FiLock, FiLogIn, FiShield, FiBriefcase, FiChevronDown } from "react-icons/fi";
 import logo from "../../assets/oric-muet-eesd2026.jpeg";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+// const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 export default function Login() {
     const { login } = useAuth();
@@ -70,7 +70,7 @@ export default function Login() {
 
         setLoading(true);
         try {
-            const res = await axios.post(`${API_BASE}/auth/login`, { username, password });
+            const res = await axios.post(`/auth/login`, { username, password });
 
             if (res.data.success) {
                 const { user } = res.data;
