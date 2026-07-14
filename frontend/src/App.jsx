@@ -23,6 +23,8 @@ import ManageSubmissions from './pages/admin/ManageSubmissions';
 import SubmissionDetailPage from './pages/admin/SubmissionDetailPage';
 
 axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+console.log("🔗 Axios is pointing to:", axios.defaults.baseURL);
 
 function AppContent() {
   const { user, loading } = useAuth();
