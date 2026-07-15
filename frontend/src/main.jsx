@@ -5,7 +5,16 @@ import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 
-// ─── AXIOS GLOBAL CONFIGURATION (CENTRALIZED) ─────────────────────
+// ─── RESTORE TOKEN FROM LOCALSTORAGE ──────────────────────────────
+const token = localStorage.getItem('token');
+if (token) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  console.log('✅ Token restored from localStorage');
+} else {
+  console.log('ℹ️ No token found in localStorage');
+}
+
+// ─── AXIOS GLOBAL CONFIGURATION ────────────────────────────────────
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 if (!API_BASE_URL) {

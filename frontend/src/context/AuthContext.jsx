@@ -1,4 +1,3 @@
-// context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
@@ -27,9 +26,11 @@ export const AuthProvider = ({ children }) => {
         const verify = async () => {
             if (user) {
                 try {
-                    await axios.get(`/api/my-submissions`);
+                    await axios.get('/api/my-submissions');
                 } catch {
                     localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                    delete axios.defaults.headers.common['Authorization'];
                     setUser(null);
                 }
             }
@@ -45,9 +46,15 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout`);
-        } catch { }
+            await axios.post('/auth/logout');
+        } catch (err) {
+            console.log(err)
+        }
+
+
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        delete axios.defaults.headers.common['Authorization'];
         setUser(null);
     };
 
