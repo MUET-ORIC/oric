@@ -84,8 +84,6 @@ export default function SubmissionsTable({
                                         <FiEye className="w-4 h-4" />
                                     </button>
 
-                                    {/* ─── Edit Button ────────────────── */}
-                                    {/* ✅ FIX: Passes the correct submission */}
                                     <button
                                         onClick={() => onEdit(sub)}
                                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"

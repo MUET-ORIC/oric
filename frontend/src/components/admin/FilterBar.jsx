@@ -43,12 +43,13 @@ export default function FilterBar({ filters, setFilters }) {
 
     const totalActive = activeCount();
 
+    // ─── FIXED: Date presets with full ISO datetime ────────────────
     const setDateRange = (days) => {
         const end = new Date();
         const start = new Date();
 
         if (days === 1) {
-            // TODAY: Start of today to end of today
+            // TODAY: Start of today (00:00:00) to end of today (23:59:59.999)
             start.setHours(0, 0, 0, 0);
             end.setHours(23, 59, 59, 999);
         } else {
@@ -60,8 +61,8 @@ export default function FilterBar({ filters, setFilters }) {
 
         setFilters((prev) => ({
             ...prev,
-            startDate: start.toISOString().split('T')[0],
-            endDate: end.toISOString().split('T')[0],
+            startDate: start.toISOString(), // ✅ Full datetime
+            endDate: end.toISOString(),     // ✅ Full datetime
             page: 1,
         }));
     };
@@ -181,7 +182,7 @@ export default function FilterBar({ filters, setFilters }) {
                         <input
                             type="date"
                             name="startDate"
-                            value={filters.startDate || ''}
+                            value={filters.startDate ? filters.startDate.split('T')[0] : ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm bg-white"
                         />
@@ -198,7 +199,7 @@ export default function FilterBar({ filters, setFilters }) {
                         <input
                             type="date"
                             name="endDate"
-                            value={filters.endDate || ''}
+                            value={filters.endDate ? filters.endDate.split('T')[0] : ''}
                             onChange={handleChange}
                             className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm bg-white"
                         />
@@ -222,8 +223,8 @@ export default function FilterBar({ filters, setFilters }) {
                         {filters.module && <Chip label={`Module: ${filters.module}`} onRemove={() => setFilters((p) => ({ ...p, module: '', page: 1 }))} />}
                         {filters.kpi && <Chip label={`KPI: ${filters.kpi}`} onRemove={() => setFilters((p) => ({ ...p, kpi: '', page: 1 }))} />}
                         {filters.department && <Chip label={`Dept: ${filters.department}`} onRemove={() => setFilters((p) => ({ ...p, department: '', page: 1 }))} />}
-                        {filters.startDate && <Chip label={`From: ${filters.startDate}`} onRemove={() => setFilters((p) => ({ ...p, startDate: '', page: 1 }))} />}
-                        {filters.endDate && <Chip label={`To: ${filters.endDate}`} onRemove={() => setFilters((p) => ({ ...p, endDate: '', page: 1 }))} />}
+                        {filters.startDate && <Chip label={`From: ${new Date(filters.startDate).toLocaleDateString()}`} onRemove={() => setFilters((p) => ({ ...p, startDate: '', page: 1 }))} />}
+                        {filters.endDate && <Chip label={`To: ${new Date(filters.endDate).toLocaleDateString()}`} onRemove={() => setFilters((p) => ({ ...p, endDate: '', page: 1 }))} />}
                         {filters.search && <Chip label={`Search: ${filters.search}`} onRemove={() => setFilters((p) => ({ ...p, search: '', page: 1 }))} />}
                         {filters.submittedBy && <Chip label={`User: ${filters.submittedBy}`} onRemove={() => setFilters((p) => ({ ...p, submittedBy: '', page: 1 }))} />}
                     </div>
