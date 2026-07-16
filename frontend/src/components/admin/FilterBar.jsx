@@ -43,7 +43,6 @@ export default function FilterBar({ filters, setFilters }) {
 
     const totalActive = activeCount();
 
-    // ─── FIXED: Date presets with full ISO datetime ────────────────
     const setDateRange = (days) => {
         const end = new Date();
         const start = new Date();
@@ -61,8 +60,8 @@ export default function FilterBar({ filters, setFilters }) {
 
         setFilters((prev) => ({
             ...prev,
-            startDate: start.toISOString(), // ✅ Full datetime
-            endDate: end.toISOString(),     // ✅ Full datetime
+            startDate: start.toISOString(),
+            endDate: end.toISOString(),
             page: 1,
         }));
     };
