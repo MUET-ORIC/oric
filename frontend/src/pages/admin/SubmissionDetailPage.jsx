@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getSubmissions, updateSubmission, deleteSubmission } from '../../api/admin';
+import { getSubmissionById, updateSubmission, deleteSubmission } from '../../api/admin';
 import { FiArrowLeft, FiSave, FiX, FiTrash2, FiEdit2, FiFile, FiDownload } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
@@ -19,8 +19,8 @@ export default function SubmissionDetailPage() {
 
     const fetchSubmission = async () => {
         try {
-            const res = await getSubmissions({ _id: id });
-            const sub = res.data.submissions[0];
+            const res = await getSubmissionById(id);
+            const sub = res.data.submission;
             if (!sub) {
                 toast.error('Submission not found');
                 navigate('/admin/submissions');

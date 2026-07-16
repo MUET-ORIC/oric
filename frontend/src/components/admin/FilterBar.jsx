@@ -43,11 +43,21 @@ export default function FilterBar({ filters, setFilters }) {
 
     const totalActive = activeCount();
 
-    // Quick date presets
     const setDateRange = (days) => {
         const end = new Date();
         const start = new Date();
-        start.setDate(start.getDate() - days);
+
+        if (days === 1) {
+            // TODAY: Start of today to end of today
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+        } else {
+            // Week, Month, Year: Go back N days from today
+            start.setDate(start.getDate() - days);
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
+        }
+
         setFilters((prev) => ({
             ...prev,
             startDate: start.toISOString().split('T')[0],

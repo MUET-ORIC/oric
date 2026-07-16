@@ -4,6 +4,10 @@ export const getSubmissions = (params) => {
     return axios.get(`/api/submissions`, { params });
 };
 
+export const getSubmissionById = (id) => {
+    return axios.get(`/api/submissions/${id}`);
+};
+
 export const deleteSubmission = (id) => {
     return axios.delete(`/api/submissions/${id}`);
 };
