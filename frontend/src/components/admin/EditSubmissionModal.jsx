@@ -10,10 +10,14 @@ export default function EditSubmissionModal({ submission, onClose, onUpdate }) {
     // ✅ Reset fields when submission changes
     useEffect(() => {
         if (submission) {
-            console.log('📄 Modal received submission:', submission._id, submission.kpi); // Debug log
+            console.log('📄 Modal received submission:', {
+                id: submission._id,
+                kpi: submission.kpi,
+                fields: submission.fields
+            });
             setFields(submission.fields || {});
         }
-    }, [submission]);  // ✅ Dependency ensures update on change
+    }, [submission]);
 
     const handleSave = async () => {
         setLoading(true);
@@ -22,8 +26,9 @@ export default function EditSubmissionModal({ submission, onClose, onUpdate }) {
             toast.success('Updated successfully');
             onUpdate();
             onClose();
-        } catch {
-            toast.error('Failed to update');
+        } catch (err) {
+            console.error('Update error:', err);
+            toast.error('Update failed');
         } finally {
             setLoading(false);
         }
@@ -34,23 +39,23 @@ export default function EditSubmissionModal({ submission, onClose, onUpdate }) {
     const fieldKeys = Object.keys(fields);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-800">
-                        Edit Submission: {submission.kpi}
-                    </h2>
+                    <h2 className="text-xl font-bold">Edit Submission</h2>
                     <button
                         onClick={onClose}
-                        className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition"
                     >
                         <FiX className="w-5 h-5" />
                     </button>
                 </div>
 
+                {/* ✅ Show which submission is being edited */}
                 <div className="text-sm text-gray-500 mb-4">
-                    <span className="font-medium">ID:</span> {submission._id} •
-                    <span className="ml-2 font-medium">Department:</span> {submission.department}
+                    Editing: <span className="font-medium text-gray-700">{submission.kpi}</span>
+                    {' • '}
+                    ID: <span className="font-mono text-xs">{submission._id}</span>
                 </div>
 
                 <div className="space-y-3">
@@ -75,20 +80,20 @@ export default function EditSubmissionModal({ submission, onClose, onUpdate }) {
                     )}
                 </div>
 
-                <div className="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+                <div className="flex gap-2 mt-4">
                     <button
                         onClick={handleSave}
                         disabled={loading}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition disabled:opacity-50"
+                        className="px-4 py-2 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition disabled:opacity-50 flex items-center gap-2"
                     >
-                        <FiSave className="w-4 h-4" />
-                        {loading ? 'Saving...' : 'Save Changes'}
+                        <FiSave className="inline" />
+                        {loading ? 'Saving...' : 'Save'}
                     </button>
                     <button
                         onClick={onClose}
-                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-xl hover:bg-gray-50 transition"
+                        className="px-4 py-2 border rounded-xl hover:bg-gray-50 transition"
                     >
-                        <FiX className="w-4 h-4" /> Cancel
+                        <FiX className="inline mr-2" /> Cancel
                     </button>
                 </div>
             </div>

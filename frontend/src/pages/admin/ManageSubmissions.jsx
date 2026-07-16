@@ -23,6 +23,7 @@ export default function ManageSubmissions() {
     });
     const [total, setTotal] = useState(0);
     const [editingSubmission, setEditingSubmission] = useState(null);
+    const [modalKey, setModalKey] = useState(0);
 
     const fetchData = async () => {
         setLoading(true);
@@ -60,6 +61,7 @@ export default function ManageSubmissions() {
     const handleEditClick = (submission) => {
         console.log('📝 Editing submission:', submission._id, submission.kpi);
         setEditingSubmission(submission);
+        setModalKey(prev => prev + 1);
     };
 
     return (
@@ -93,12 +95,14 @@ export default function ManageSubmissions() {
                 />
             </div>
 
-
             {editingSubmission && (
                 <EditSubmissionModal
-                    key={editingSubmission._id}
+                    key={modalKey}
                     submission={editingSubmission}
-                    onClose={() => setEditingSubmission(null)}
+                    onClose={() => {
+                        setEditingSubmission(null);
+                        setModalKey(0);
+                    }}
                     onUpdate={fetchData}
                 />
             )}

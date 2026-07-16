@@ -84,6 +84,7 @@ export default function SubmissionsTable({
                                         <FiEye className="w-4 h-4" />
                                     </button>
 
+
                                     <button
                                         onClick={() => onEdit(sub)}
                                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
@@ -115,7 +116,6 @@ export default function SubmissionsTable({
                 </span>
 
                 <div className="flex items-center gap-2">
-                    {/* ─── Previous Button ──────────────────────────── */}
                     <button
                         onClick={() => onPageChange(page - 1)}
                         disabled={page === 1}
@@ -127,12 +127,10 @@ export default function SubmissionsTable({
                         Previous
                     </button>
 
-                    {/* ─── Page Indicator ──────────────────────────── */}
                     <span className="px-4 py-2 text-sm font-medium text-gray-700">
                         Page {page} of {totalPages || 1}
                     </span>
 
-                    {/* ─── Next Button ──────────────────────────────── */}
                     <button
                         onClick={() => onPageChange(page + 1)}
                         disabled={page >= totalPages}
