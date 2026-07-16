@@ -75,6 +75,7 @@ export default function SubmissionsTable({
                             </td>
                             <td className="px-4 py-3">
                                 <div className="flex items-center justify-center gap-1">
+                                    {/* ─── View Button ────────────────── */}
                                     <button
                                         onClick={() => navigate(`/admin/submissions/${sub._id}`)}
                                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
@@ -82,6 +83,9 @@ export default function SubmissionsTable({
                                     >
                                         <FiEye className="w-4 h-4" />
                                     </button>
+
+                                    {/* ─── Edit Button ────────────────── */}
+                                    {/* ✅ FIX: Passes the correct submission */}
                                     <button
                                         onClick={() => onEdit(sub)}
                                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
@@ -89,6 +93,8 @@ export default function SubmissionsTable({
                                     >
                                         <FiEdit2 className="w-4 h-4" />
                                     </button>
+
+                                    {/* ─── Delete Button ──────────────── */}
                                     <button
                                         onClick={() => onDelete(sub._id)}
                                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
