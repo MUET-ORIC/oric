@@ -27,7 +27,6 @@ export default function ManageSubmissions() {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Remove empty filter values before sending
             const cleanFilters = Object.fromEntries(
                 Object.entries(filters).filter(([_, value]) => value !== '')
             );
@@ -58,6 +57,11 @@ export default function ManageSubmissions() {
         }
     };
 
+    const handleEditClick = (submission) => {
+        console.log('📝 Editing submission:', submission._id, submission.kpi);
+        setEditingSubmission(submission);
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -85,12 +89,14 @@ export default function ManageSubmissions() {
                     total={total}
                     page={filters.page}
                     limit={filters.limit}
-                    onEdit={(sub) => setEditingSubmission(sub)}
+                    onEdit={handleEditClick}
                 />
             </div>
 
+
             {editingSubmission && (
                 <EditSubmissionModal
+                    key={editingSubmission._id}
                     submission={editingSubmission}
                     onClose={() => setEditingSubmission(null)}
                     onUpdate={fetchData}
