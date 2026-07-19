@@ -29,8 +29,8 @@ export default function ResearchExcellence() {
     const kpis = [
         "Number of Research Proposals Submitted for Funding from HEC (Proposals Submitted to PhD Faculty Ratio)",
         "Research Proposals Approved for Funding by HEC (Proposals Acceptance Ratio)",
-        "Number of Research Projects (won from HEC) which were due to be Completed (in this year)",
-        "Number of Research Projects (won from HEC) which were Completed (in this year)",
+        "Number of Research Projects (won from HEC) which were due to be Completed",
+        "Number of Research Projects (won from HEC) which were Completed",
         "Number of Research Proposals Submitted for Funding (from non HEC source - National or International) (Proposals Submitted to PhD Faculty Ratio)",
         "Research Proposals Approved for Funding (from non HEC source - National or International) - (Proposals Acceptance Ratio)",
         "Number of Research Projects Completed (won through non-HEC source - National or International) (which were due to be completed)",
