@@ -22,17 +22,39 @@ export default function Navbar() {
 
     const getBreadcrumb = () => {
         const path = location.pathname;
+        const yearRange = `(30 July ${previousYear} - 1st June ${currentYear})`;
+
         if (path === "/department") return { label: "Dashboard", icon: FiHome };
-        if (path === "/research") return { label: `Research Excellence <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiBook };
-        if (path === "/innovation") return { label: `Innovation & Commercialization <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiTrendingUp };
-        if (path === "/sustainability") return { label: `Sustainability & Capacity Building <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiAward };
+        if (path === "/research") return {
+            label: (
+                <span>
+                    Research Excellence <span className="text-blue-900">{yearRange}</span>
+                </span>
+            ),
+            icon: FiBook
+        };
+        if (path === "/innovation") return {
+            label: (
+                <span>
+                    Innovation & Commercialization <span className="text-blue-900">{yearRange}</span>
+                </span>
+            ),
+            icon: FiTrendingUp
+        };
+        if (path === "/sustainability") return {
+            label: (
+                <span>
+                    Sustainability & Capacity Building <span className="text-blue-900">{yearRange}</span>
+                </span>
+            ),
+            icon: FiAward
+        };
         if (path === "/my-submissions") return { label: "My Submissions", icon: FiFolder };
         if (path === "/admin") return { label: "Admin Dashboard", icon: FiBarChart2 };
         if (path === "/admin/submissions") return { label: "All Submissions", icon: FiFileText };
         if (path.startsWith("/admin/submissions/")) return { label: "Submission Details", icon: FiFileText };
         return { label: "Dashboard", icon: FiHome };
     };
-
     const breadcrumb = getBreadcrumb();
     const Icon = breadcrumb.icon;
 
