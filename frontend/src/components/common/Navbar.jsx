@@ -23,9 +23,9 @@ export default function Navbar() {
     const getBreadcrumb = () => {
         const path = location.pathname;
         if (path === "/department") return { label: "Dashboard", icon: FiHome };
-        if (path === "/research") return { label: `Research Excellence (30 July ${previousYear} - 1st June ${currentYear})`, icon: FiBook };
-        if (path === "/innovation") return { label: `Innovation & Commercialization (30 July ${previousYear} - 1st June ${currentYear})`, icon: FiTrendingUp };
-        if (path === "/sustainability") return { label: `Sustainability & Capacity Building (30 July ${previousYear} - 1st June ${currentYear})`, icon: FiAward };
+        if (path === "/research") return { label: `Research Excellence <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiBook };
+        if (path === "/innovation") return { label: `Innovation & Commercialization <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiTrendingUp };
+        if (path === "/sustainability") return { label: `Sustainability & Capacity Building <div className="text-blue-900">(30 July ${previousYear} - 1st June ${currentYear})</div>`, icon: FiAward };
         if (path === "/my-submissions") return { label: "My Submissions", icon: FiFolder };
         if (path === "/admin") return { label: "Admin Dashboard", icon: FiBarChart2 };
         if (path === "/admin/submissions") return { label: "All Submissions", icon: FiFileText };
